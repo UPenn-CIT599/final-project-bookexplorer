@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PredictionLearner {
 	/**
@@ -7,6 +8,7 @@ public class PredictionLearner {
 	 */
 	
 	ArrayList<Prediction> predictions;
+	ArrayList<Double> weight = new ArrayList<Double>(Arrays.asList(0.2, 0.2, 0.2, 0.2, 0.2));
 	
 	public void makePrediction(User user) {
 		// calls on similarity calculator class
