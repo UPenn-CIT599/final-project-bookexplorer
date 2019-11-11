@@ -1,5 +1,10 @@
 
 public class UserInteraction {
+	
+	/**
+	 * Responsibility: Controls main logic for user interactions
+	 * Collaborator: PredictionMaker
+	 */
 
 	public static void main(String[] args) {
 		// To user: Please provide 3 books that you like
