@@ -13,6 +13,11 @@ Book Explorer is an application that aims to recommend new books and authors bas
     2. Classes responsible for key process logic:
         * PredictionMaker
         * PredictionLearner
-        * RequestMaker
+        * RequestHandler
         * UserInteraction
         * WebScraper (TBD)
+        
+2. External Libraries Dependencies:
+    * okhttpclient
+        * kotlin-standardlib
+        * okio
