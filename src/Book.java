@@ -22,8 +22,11 @@ public class Book {
 	public double leftRightSimilarityMetric(String inputTitle, String actualTitle) {
 		
 		// Puts title to lowercase letters
-		inputTitle.toLowerCase();
-		actualTitle.toLowerCase();
+		String inputLowercase = inputTitle.toLowerCase();
+		String actualLowercase = actualTitle.toLowerCase();
+		
+		String inputTitleNoSpaces = inputLowercase.replaceAll(" ", "");
+		String actualTitleNoSpaces = actualLowercase.replace(" ", "");
 		
 		// Initializing leftSimilarity, rightSimilarity
 		double leftSimilarity = 0.0;
@@ -33,12 +36,12 @@ public class Book {
 		String smallerTitle = "";
 		String largerTitle = "";
 		
-		if (inputTitle.length() < actualTitle.length()) {
-			smallerTitle = inputTitle;
-			largerTitle = actualTitle;
+		if (inputTitleNoSpaces.length() < actualTitleNoSpaces.length()) {
+			smallerTitle = inputTitleNoSpaces;
+			largerTitle = actualTitleNoSpaces;
 		} else {
-			smallerTitle = actualTitle;
-			largerTitle = inputTitle;
+			smallerTitle = actualTitleNoSpaces;
+			largerTitle = inputTitleNoSpaces;
 		}
 		
 		// Left Similarity
@@ -69,8 +72,11 @@ public class Book {
 	public double getCommonPercentage(String inputTitle, String actualTitle) {
 		
 		// Puts title to lowercase letters
-		inputTitle.toLowerCase();
-		actualTitle.toLowerCase();
+		String inputLowercase = inputTitle.toLowerCase();
+		String actualLowercase = actualTitle.toLowerCase();
+				
+		String inputTitleNoSpaces = inputLowercase.replaceAll(" ", "");
+		String actualTitleNoSpaces = actualLowercase.replace(" ", "");
 		
 		// Initializing Character arrays to keep track of letters in titles
 		ArrayList<Character> lettersInputTitle = new ArrayList<>();
@@ -79,18 +85,18 @@ public class Book {
 		ArrayList<Character> similarCharacters = new ArrayList<>();
 		ArrayList<Character> allCharacters = new ArrayList<>();
 		
-		for (int i = 0; i < inputTitle.length(); i++) {
-			if (!lettersInputTitle.contains(inputTitle.charAt(i))) {
-				lettersInputTitle.add(inputTitle.charAt(i));
-				allCharacters.add(inputTitle.charAt(i));
+		for (int i = 0; i < inputTitleNoSpaces.length(); i++) {
+			if (!lettersInputTitle.contains(inputTitleNoSpaces.charAt(i))) {
+				lettersInputTitle.add(inputTitleNoSpaces.charAt(i));
+				allCharacters.add(inputTitleNoSpaces.charAt(i));
 			}
 		}
 		
-		for (int j = 0; j < actualTitle.length(); j++) {
-			if (!lettersActualTitle.contains(actualTitle.charAt(j))) {
-				lettersActualTitle.add(actualTitle.charAt(j));
-				if (!allCharacters.contains(actualTitle.charAt(j))) {
-					allCharacters.add(actualTitle.charAt(j));
+		for (int j = 0; j < actualTitleNoSpaces.length(); j++) {
+			if (!lettersActualTitle.contains(actualTitleNoSpaces.charAt(j))) {
+				lettersActualTitle.add(actualTitleNoSpaces.charAt(j));
+				if (!allCharacters.contains(actualTitleNoSpaces.charAt(j))) {
+					allCharacters.add(actualTitleNoSpaces.charAt(j));
 				}
 			}
 		}
@@ -102,7 +108,8 @@ public class Book {
 		}
 		
 		// Initialize commonPercentage
-		double commonPercentage = similarCharacters.size() / allCharacters.size();
+		double commonPercentage = (double) similarCharacters.size() / allCharacters.size();
+//		commonPercentage = (commonPercentage, %.4f);
 		
 		return commonPercentage;
 		
