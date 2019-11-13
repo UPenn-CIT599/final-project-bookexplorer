@@ -1,8 +1,8 @@
 # Book Explorer
 
-Book Explorer is an application that aims to recommend new books and authors based on the genre and most recent author and book that an user read. We leverage GoodReads API to retrieve an author's detail and books, and maintains a database of author names of our own research to find similar authors of the same genre. 
+Book Explorer is a java application that aims to recommend authors and books to users based on their most recent reading history. It leverages GoodReads API to retrieve details of authors and their books, and runs its own recommendation algorithm. 
 
-1. Class Components:
+1. **Architecture Components**:
     1. Classes that represent objects:
         * Author
         * Book
@@ -12,12 +12,18 @@ Book Explorer is an application that aims to recommend new books and authors bas
         * Publisher
     2. Classes responsible for key process logic:
         * PredictionMaker
+            * Runs the process of making author and book recommendations
         * PredictionLearner
+            * A learner model to improve from existing predictions
         * RequestHandler
+            * Making requests and parsing responses from GoodReads API
         * UserInteraction
+            * Runs the user interaction process
         * WebScraper (TBD)
+            * Web scraper to obtain more book and author details
         
-2. External Libraries Dependencies:
-    * okhttpclient
-        * kotlin-standardlib
-        * okio
+2. **External Libraries Dependencies** 
+    * please add jar file or use a dependency management tool for below libraries:
+        * okhttpclient
+            * kotlin-standardlib
+            * okio
