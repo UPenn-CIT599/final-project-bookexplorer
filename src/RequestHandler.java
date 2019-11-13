@@ -30,7 +30,7 @@ public class RequestHandler {
     }
 
     /**
-     *
+     * calls on goodreads API and get author ID and name
      * @param authorName
      * @return string of response from goodreads API
      * @throws MalformedURLException
@@ -49,21 +49,6 @@ public class RequestHandler {
             String name = doc.getElementsByTagName("name").item(0).getTextContent();
             String authorID = doc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
             return authorID + " " + name;
-            // expected response:
-//            <?xml version="1.0" encoding="UTF-8"?>
-//              <GoodreadsResponse>
-//                  <Request>
-//                      <authentication>true</authentication>
-//                      <key><![CDATA[GFGG3YidZvZxbGosF8DWA]]></key>
-//                      <method><![CDATA[api_author_link]]></method>
-//                  </Request>
-//
-//
-//		            <author id="1077326">
-//			            <name><![CDATA[J.K. Rowling]]></name>
-//			            <link>https://www.goodreads.com/author/show/1077326.J_K_Rowling?utm_medium=api&amp;utm_source=author_link</link>
-//		            </author>
-//          </GoodreadsResponse>
         } catch (SAXException e) {
             //TODO add exception handling
             return e.getLocalizedMessage();
