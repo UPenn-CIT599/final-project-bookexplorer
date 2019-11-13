@@ -1,5 +1,7 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.charset.MalformedInputException;
 
@@ -14,19 +16,28 @@ class RequestHandlerTest {
         handler = new RequestHandler();
     }
 
-    @org.junit.jupiter.api.AfterEach
+    @AfterEach
     void tearDown() {
     }
 
     @Test
     void getAuthor() {
+        //TODO stub below instead of making actual http requests
         try {
             String authorResp = handler.getAuthor("Rowling");
-            assertEquals("JK Rowling", authorResp);
+            assertEquals("1077326 J.K. Rowling", authorResp);
         } catch (MalformedInputException exp) {
             System.out.println("Incorrect search author URL");
         } catch (IOException exp) {
             System.out.println(exp.getLocalizedMessage());
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
         }
+    }
+
+    @Test
+    void isAuthorFound() {
+        boolean found = handler.isAuthorFound("Arthur Conan Doyle");
+        assertEquals(true, found);
     }
 }

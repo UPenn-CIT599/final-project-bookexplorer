@@ -1,18 +1,22 @@
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Scanner;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 
 public class RequestHandler {
 
     /**
      * Responsibility: makes http request to goodreads API and parses XML responses
-     * dependencies: okhttp (depends on kotlin-stdlib and okio)
      */
 
     String authorAPIUrl;
@@ -21,18 +25,31 @@ public class RequestHandler {
 
     public RequestHandler() {
         this.authorAPIUrl = "https://www.goodreads.com/api/author_url/";
-        //TODO update below to be the real developer key
         this.developerKey = "GFGG3YidZvZxbGosF8DWA";
         this.client = new OkHttpClient();
     }
 
-    // https://stackoverflow.com/questions/2793150/how-to-use-java-net-urlconnection-to-fire-and-handle-http-requests
-    public String getAuthor(String authorName) throws MalformedURLException, IOException {
+    /**
+     *
+     * @param authorName
+     * @return string of response from goodreads API
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    public String getAuthor(String authorName) throws MalformedURLException, IOException, ParserConfigurationException {
         String keyParam = String.format("key=%s", this.developerKey);
         String authorReqUrl = authorAPIUrl + authorName + "?" + keyParam;
         Request request = new Request.Builder().url(authorReqUrl).build();
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            String respBody = response.body().string();
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource source = new InputSource();
+            source.setCharacterStream(new StringReader(respBody));
+            Document doc = builder.parse(source);
+            String name = doc.getElementsByTagName("name").item(0).getTextContent();
+            String authorID = doc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
+            return authorID + " " + name;
+            // expected response:
 //            <?xml version="1.0" encoding="UTF-8"?>
 //              <GoodreadsResponse>
 //                  <Request>
@@ -46,14 +63,14 @@ public class RequestHandler {
 //			            <name><![CDATA[J.K. Rowling]]></name>
 //			            <link>https://www.goodreads.com/author/show/1077326.J_K_Rowling?utm_medium=api&amp;utm_source=author_link</link>
 //		            </author>
-//
-//
-//
 //          </GoodreadsResponse>
+        } catch (SAXException e) {
+            //TODO add exception handling
+            return e.getLocalizedMessage();
         }
     }
 
-    private boolean isAuthorFound(String respBody) {
+    public boolean isAuthorFound(String respBody) {
         return true;
     }
 }
