@@ -19,6 +19,19 @@ import java.util.ArrayList;
  */
 public class Book {
 	
+	/**
+	 * Calculates how similar the title of a book the user inputs is
+	 * to the title of another book being compared to it, when both titles
+	 * are lined up with one another (how many letters are located in 
+	 * the same position if both book titles were placed in an array).
+	 * 
+	 * @param inputTitle - user entered book title
+	 * 
+	 * @param actualTitle - book title to be compared with inputTitle
+	 * 
+	 * @return - average similarity when comparing names from left to right
+	 * and vice versa
+	 */
 	public double leftRightSimilarityMetric(String inputTitle, String actualTitle) {
 		
 		// Puts title to lowercase letters
@@ -69,6 +82,18 @@ public class Book {
 		
 	}
 	
+	/**
+	 * Calculates the percentage of how many letters both the inputted book
+	 * title and the comparing book title have in common with one another
+	 * (Number of letters similar / All letters found in both titles).
+	 * 
+	 * @param inputTitle - user entered book title
+	 * 
+	 * @param actualTitle - book title to be compared with inputTitle
+	 * 
+	 * @return - Percentage of letters the user inputted book title has similar
+	 * to the compared book title
+	 */
 	public double getCommonPercentage(String inputTitle, String actualTitle) {
 		
 		// Puts title to lowercase letters
@@ -109,12 +134,32 @@ public class Book {
 		
 		// Initialize commonPercentage
 		double commonPercentage = (double) similarCharacters.size() / allCharacters.size();
-//		commonPercentage = (commonPercentage, %.4f);
 		
 		return commonPercentage;
 		
 	}
 	
+	/**
+	 * Adds inputted book title's to ArrayList that holds similar titles so
+	 * long as the inputted titles have a high enough average similarity
+	 * and common percentage
+	 * 
+	 * @param bookTitle - title of the inputted book
+	 * 
+	 * @param similarityMetric - average similarity (left and right) of author
+	 * 
+	 * @param commonPercentage - percentage of similar letters of book title
+	 * 
+	 * @param similarityMetricStandard - average similarity standard that
+	 * variable similarityMetric must be higher than to be moved to ArrayList
+	 * of similar book titles
+	 * 
+	 * @param commonPercentageStandard - percentage of similar letters standard
+	 * that variable commonPercentage must be higher than to be moved to ArrayList
+	 * of similar book titles
+	 * 
+	 * @return - ArrayList of similar book titles
+	 */
 	public ArrayList<String> getSimilarWords(String bookTitle, double similarityMetric,
 			double commonPercentage, double similarityMetricStandard, double commonPercentageStandard) {
 		

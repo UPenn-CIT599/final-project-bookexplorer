@@ -17,6 +17,19 @@ import java.util.ArrayList;
  */
 public class Author {
 	
+	/**
+	 * Calculates how similar the author name the user inputs is to a name
+	 * being compared to it, when both names are lined up with one another
+	 * (how many letters are located in the same position if both author
+	 * names were placed in an array).
+	 * 
+	 * @param inputAuthor - user entered author name
+	 * 
+	 * @param actualAuthor - author name to be compared with inputAuthor
+	 * 
+	 * @return - average similarity when comparing names from left to right and 
+	 * vice versa
+	 */
 	public double leftRightSimilarityMetric(String inputAuthor, String actualAuthor) {
 		
 		// Puts author's name to lowercase letters
@@ -64,6 +77,18 @@ public class Author {
 		
 	}
 	
+	/**
+	 * Calculates how many letters both the user's inputted name and 
+	 * an author's name compared to said input have in common with one 
+	 * another (Number of letters similar / All letters in both names).
+	 * 
+	 * @param inputAuthor - user entered author name
+	 * 
+	 * @param actualAuthor - author name to be compared with inputAuthor
+	 * 
+	 * @return - Percentage of letters the user inputted name has similar
+	 * to the compared name
+	 */
 	public double getCommonPercentage(String inputAuthor, String actualAuthor) {
 		
 		// Puts title to lowercase letters
@@ -107,6 +132,27 @@ public class Author {
 		
 	}
 	
+	/**
+	 * Adds inputted names of author's to ArrayList of similar author names so long as
+	 * the inputted names have a high enough average similarity and common percentage
+	 * of letters.
+	 * 
+	 * @param author - name of the inputted author
+	 * 
+	 * @param similarityMetric - average similarity (left and right) of author compared 
+	 * to actual author name
+	 * 
+	 * @param commonPercentage - percentage of similar letters of author compared to
+	 * actual author name
+	 * 
+	 * @param similarityMetricStandard - average similarity standard that variable
+	 * similarityMetric must be higher than to be moved to ArrayList of similar authors
+	 * 
+	 * @param commonPercentageStandard - percentage of similar letters standard that variable
+	 * commonPercentage must be higher than to be moved to ArrayList of similar authors
+	 * 
+	 * @return - ArrayList of similar author names
+	 */
 	public ArrayList<String> getSimilarAuthors(String author, double similarityMetric,
 			double commonPercentage, double similarityMetricStandard, double commonPercentageStandard) {
 		
