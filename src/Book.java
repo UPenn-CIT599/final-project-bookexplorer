@@ -172,5 +172,3 @@ public class Book {
 		return similarBookTitles;
 		
 	}
-
-}

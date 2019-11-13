@@ -16,6 +16,12 @@ import java.util.ArrayList;
  *
  */
 public class Author {
+  
+  String name;
+
+    public Author(String name) {
+        this.name = name;
+    }
 	
 	/**
 	 * Calculates how similar the author name the user inputs is to a name
@@ -165,5 +171,3 @@ public class Author {
 		return similarAuthorNames;
 		
 	}
-
-}
