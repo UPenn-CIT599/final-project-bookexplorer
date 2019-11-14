@@ -8,10 +8,10 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
 
 public class RequestHandler {
 
@@ -20,11 +20,13 @@ public class RequestHandler {
      */
 
     String authorAPIUrl;
+    String authorDetailUrl;
     String developerKey;
     OkHttpClient client;
 
     public RequestHandler() {
         this.authorAPIUrl = "https://www.goodreads.com/api/author_url/";
+        this.authorDetailUrl = "https://www.goodreads.com/author/show/";
         this.developerKey = "GFGG3YidZvZxbGosF8DWA";
         this.client = new OkHttpClient();
     }
@@ -56,9 +58,34 @@ public class RequestHandler {
         return authorDoc.getElementsByTagName("name").getLength() > 0;
     }
 
-    public Author saveAuthorDetails(String authorID) {
-        String keyParam = String.format("key=%s", this.developerKey);
+    //TODO move below method to RecMaker
+    public Author saveAuthorDetails(String authorID) throws ParserConfigurationException, SAXException, IOException {
+        Document doc = callAuthorDetailApi(authorID);
+        String authorName = doc.getElementsByTagName("name").item(0).getTextContent();
+        String description = doc.getElementsByTagName("about").item(0).getTextContent();
+        Author newAuthor = new Author(authorName);
+        if (!description.equals("")) {
+            newAuthor.description = description;
+        }
+        return newAuthor;
+    }
 
+    /**
+     *
+     * @param authorID
+     * @return
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
+    private Document callAuthorDetailApi(String authorID) throws IOException, ParserConfigurationException, SAXException {
+        String keyParam = String.format("format=%skey=%s", "xml", this.developerKey);
+        String detailReqUrl = authorDetailUrl + authorID + "?" + keyParam;
+        Request request = new Request.Builder().url(detailReqUrl).build();
+        Response response = client.newCall(request).execute();
+        String respBody = response.body().string();
+        Document doc = parseResponse(respBody);
+        return doc;
     }
 
     /**
