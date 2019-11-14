@@ -24,7 +24,7 @@ class RequestHandlerTest {
     void getAuthor() {
         //TODO stub below instead of making actual http requests
         try {
-            String authorResp = handler.getAuthor("Rowling");
+            String authorResp = handler.getAuthorID("Rowling");
             assertEquals("1077326 J.K. Rowling", authorResp);
         } catch (MalformedInputException exp) {
             System.out.println("Incorrect search author URL");

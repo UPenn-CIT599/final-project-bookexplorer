@@ -1,3 +1,9 @@
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class UserInteraction {
 	
@@ -5,6 +11,14 @@ public class UserInteraction {
 	 * Responsibility: Controls main logic for user interactions
 	 * Collaborator: PredictionMaker
 	 */
+
+	RecMaker recMaker;
+	RequestHandler reqHandler;
+
+	public UserInteraction() {
+		this.recMaker = new RecMaker();
+		this.reqHandler = new RequestHandler();
+	}
 
 	public static void main(String[] args) {
 		// To user: select a genre from dropdown menu that they recently read
@@ -16,5 +30,39 @@ public class UserInteraction {
 		// Return recommended author, with image and short description
 		// Return recommended author's book, with image and short description, amazon link, etc.
 		// Ask for user feedback - if not good, adjust weight of similarity metrics, then give another one
+	}
+
+	public void selectGenre() {
+
+	}
+
+	public String authorInput() {
+		Scanner in = new Scanner(System.in);
+		System.out.println("Please provide an author that you most recently read and enjoyed");
+		String authorName = in.nextLine();
+		return authorName;
+	}
+
+	public void bookInput() {
+
+	}
+
+	public void recommendAuthorAndBook(String authorName, String genreName) {
+		Author nextAuthor = null;
+		try {
+			Document authorApiResp = reqHandler.authorRespDoc(authorName);
+			while(!reqHandler.isAuthorFound(authorApiResp)) {
+				authorName = authorInput();
+				authorApiResp = reqHandler.authorRespDoc(authorName);
+			}
+			nextAuthor = recMaker.getAuthorPrediction(authorName, genreName);
+		} catch (ParserConfigurationException e) {
+			System.out.println("Error finding your author, please try again");
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Book nextBook = recMaker.getBookPrediction(nextAuthor);
 	}
 }

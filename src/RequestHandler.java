@@ -31,31 +31,46 @@ public class RequestHandler {
 
     /**
      * calls on goodreads API and get author ID and name
-     * @param authorName
+     * @param authorRespDoc Document object for response received from API call
      * @return string of response from goodreads API
      * @throws MalformedURLException
      * @throws IOException
      */
-    public String getAuthor(String authorName) throws MalformedURLException, IOException, ParserConfigurationException {
+    public String getAuthorID(Document authorRespDoc) throws MalformedURLException, IOException, ParserConfigurationException, SAXException {
+        String authorID = authorRespDoc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
+        return authorID;
+    }
+
+    public Document authorRespDoc(String authorName) throws IOException, SAXException, ParserConfigurationException {
         String keyParam = String.format("key=%s", this.developerKey);
         String authorReqUrl = authorAPIUrl + authorName + "?" + keyParam;
         Request request = new Request.Builder().url(authorReqUrl).build();
         try (Response response = client.newCall(request).execute()) {
             String respBody = response.body().string();
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            InputSource source = new InputSource();
-            source.setCharacterStream(new StringReader(respBody));
-            Document doc = builder.parse(source);
-            String name = doc.getElementsByTagName("name").item(0).getTextContent();
-            String authorID = doc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
-            return authorID + " " + name;
-        } catch (SAXException e) {
-            //TODO add exception handling
-            return e.getLocalizedMessage();
+            Document doc = parseResponse(respBody);
+            return doc;
         }
     }
 
-    public boolean isAuthorFound(String respBody) {
-        return true;
+    public boolean isAuthorFound(Document authorDoc) throws IOException, SAXException, ParserConfigurationException {
+        return authorDoc.getElementsByTagName("name").getLength() > 0;
+    }
+
+    public Author saveAuthorDetails(String authorID) {
+        String keyParam = String.format("key=%s", this.developerKey);
+
+    }
+
+    /**
+     * private method that parses XML response strings
+     * @param respBody
+     * @return document that can be further
+     */
+    private Document parseResponse(String respBody) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource source = new InputSource();
+        source.setCharacterStream(new StringReader(respBody));
+        Document doc = builder.parse(source);
+        return doc;
     }
 }

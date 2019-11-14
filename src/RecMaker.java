@@ -1,19 +1,21 @@
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class PredictionMaker {
+public class RecMaker {
 	/**
-	 * Responsibility: makes author and book predictions for the user
+	 * Responsibility: makes author and book recommendations for the user
 	 * Collaborator: UserInteraction, WebScraper, Book, Author
 	 */
-
-
 
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
 
-	public PredictionMaker() {
+	public RecMaker() {
 		//TODO - add csv file with author - genre pairs and read from csv file
 		ArrayList<String> yaAuthors = new ArrayList(Arrays.asList("JK Rowling"));
 		this.genreAuthors = new HashMap<String, ArrayList<String>>() {{
@@ -23,11 +25,12 @@ public class PredictionMaker {
 
 	/**
 	 * predicts an author that the user might like
-	 * @param authorFromUser author name string from user input
+	 * @param authorID author ID from goodreads
 	 * @param genre genre string from user input
 	 * @return an author object
 	 */
-	public Author getAuthorPrediction(String authorFromUser, String genre) {
+	public Author getAuthorPrediction(String authorID, String genre) throws ParserConfigurationException, SAXException, IOException {
+		Author currentAuthor = handler.saveAuthorDetails(authorID);
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		double maxSimilarity = 0;
 		String mostSimilarAuthor = "";
