@@ -18,9 +18,15 @@ import java.util.ArrayList;
 public class Author {
 
 	String name;
+	String description;
+	ArrayList<Book> books;
+	int booksCount;
 
 	public Author(String name) {
 		this.name = name;
+		this.booksCount = 0;
+		this.books = new ArrayList<Book>();
+		this.description = "";
 	}
 
 	/**
