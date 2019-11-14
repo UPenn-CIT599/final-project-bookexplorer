@@ -14,6 +14,10 @@ public class RecMaker {
 
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
+	// authors and books saved during the recommendation process
+	// ideally, below should be replaced by database models
+	ArrayList<Author> authors;
+	ArrayList<Book> books;
 
 	public RecMaker() {
 		//TODO - add csv file with author - genre pairs and read from csv file
