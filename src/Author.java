@@ -27,6 +27,9 @@ public class Author {
 
 	public Author(String name) {
 		this.name = name;
+		this.worksCount = 0;
+		this.books = new ArrayList<Book>();
+		this.description = "";
 	}
 
 	/**

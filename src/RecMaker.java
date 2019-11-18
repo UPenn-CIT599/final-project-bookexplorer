@@ -14,7 +14,7 @@ public class RecMaker {
 
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
-	HashMap<String, Author> seenAuthors;
+	HashMap<String, Author> seenAuthorsByID;
 
 	public RecMaker() {
 		//TODO - add csv file with author - genre pairs and read from csv file
@@ -22,7 +22,7 @@ public class RecMaker {
 		this.genreAuthors = new HashMap<String, ArrayList<String>>() {{
 			put("Young Adult", yaAuthors);
 		}};
-		this.seenAuthors = new HashMap<String, Author>();
+		this.seenAuthorsByID = new HashMap<String, Author>();
 	}
 
 	/**
@@ -33,10 +33,10 @@ public class RecMaker {
 	 */
 	public Author getAuthorPrediction(String authorID, String genre) throws ParserConfigurationException, SAXException, IOException {
 		Author currentAuthor;
-		if (!seenAuthors.containsKey(authorID)) {
+		if (!seenAuthorsByID.containsKey(authorID)) {
 			currentAuthor = handler.saveAuthorDetails(authorID);
 		} else {
-			currentAuthor = seenAuthors.get(authorID);
+			currentAuthor = seenAuthorsByID.get(authorID);
 		}
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		double maxSimilarity = 0;
