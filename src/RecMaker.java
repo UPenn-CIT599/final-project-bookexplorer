@@ -14,6 +14,7 @@ public class RecMaker {
 
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
+	HashMap<String, Author> seenAuthors;
 
 	public RecMaker() {
 		//TODO - add csv file with author - genre pairs and read from csv file
@@ -21,6 +22,7 @@ public class RecMaker {
 		this.genreAuthors = new HashMap<String, ArrayList<String>>() {{
 			put("Young Adult", yaAuthors);
 		}};
+		this.seenAuthors = new HashMap<String, Author>();
 	}
 
 	/**
@@ -30,7 +32,12 @@ public class RecMaker {
 	 * @return an author object
 	 */
 	public Author getAuthorPrediction(String authorID, String genre) throws ParserConfigurationException, SAXException, IOException {
-		Author currentAuthor = handler.saveAuthorDetails(authorID);
+		Author currentAuthor;
+		if (!seenAuthors.containsKey(authorID)) {
+			currentAuthor = handler.saveAuthorDetails(authorID);
+		} else {
+			currentAuthor = seenAuthors.get(authorID);
+		}
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		double maxSimilarity = 0;
 		String mostSimilarAuthor = "";
@@ -49,20 +56,5 @@ public class RecMaker {
 	 */
 	public Book getBookPrediction(Author author) {
 		return new Book();
-	}
-	
-	/**
-	 * searches for author from user input 
-	 * @param author
-	 */
-	private void findAuthor(String author) {
-		// use goodreads API to search for author URL in goodreads
-		// if author exists in goodreads, scrape author website, and return description and book titles
-		// if author does not exist, ask user for another input
-	}
-	
-	public boolean doesAuthorExist(String authorName) {
-		// TODO: update below logic to incorporate requestMaker
-		return true;
 	}
 }
