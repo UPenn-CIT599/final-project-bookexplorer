@@ -9,7 +9,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,7 +96,6 @@ public class RequestHandler {
     }
 
     /**
-<<<<<<< HEAD
      * send request and receive xml response in string
      * @param url request url
      * @return string of xml response
