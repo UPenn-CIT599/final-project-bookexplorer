@@ -18,7 +18,7 @@ public class RecMaker {
 
 	public RecMaker() {
 		//TODO - add csv file with author - genre pairs and read from csv file
-		ArrayList<String> yaAuthors = new ArrayList(Arrays.asList("JK Rowling"));
+		final ArrayList<String> yaAuthors = new ArrayList(Arrays.asList("JK Rowling"));
 		this.genreAuthors = new HashMap<String, ArrayList<String>>() {{
 			put("Young Adult", yaAuthors);
 		}};

@@ -107,11 +107,11 @@ public class Author {
 		actualAuthor.toLowerCase();
 
 		// Initializing Character arrays to keep track of letters in titles
-		ArrayList<Character> lettersInputAuthor = new ArrayList<>();
-		ArrayList<Character> lettersActualAuthor = new ArrayList<>();
+		ArrayList<Character> lettersInputAuthor = new ArrayList<Character>();
+		ArrayList<Character> lettersActualAuthor = new ArrayList<Character>();
 
-		ArrayList<Character> similarCharacters = new ArrayList<>();
-		ArrayList<Character> allCharacters = new ArrayList<>();
+		ArrayList<Character> similarCharacters = new ArrayList<Character>();
+		ArrayList<Character> allCharacters = new ArrayList<Character>();
 
 		for (int i = 0; i < inputAuthor.length(); i++) {
 			if (!lettersInputAuthor.contains(inputAuthor.charAt(i))) {
@@ -162,7 +162,7 @@ public class Author {
 	public ArrayList<String> getSimilarAuthors(String author, double similarityMetric,
 											   double commonPercentage, double similarityMetricStandard, double commonPercentageStandard) {
 
-		ArrayList<String> similarAuthorNames = new ArrayList<>();
+		ArrayList<String> similarAuthorNames = new ArrayList<String>();
 
 		if (similarityMetric > similarityMetricStandard && commonPercentage > commonPercentageStandard) {
 			similarAuthorNames.add(author);

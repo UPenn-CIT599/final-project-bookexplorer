@@ -100,11 +100,11 @@ public class Book {
 		String actualTitleNoSpaces = actualLowercase.replace(" ", "");
 
 		// Initializing Character arrays to keep track of letters in titles
-		ArrayList<Character> lettersInputTitle = new ArrayList<>();
-		ArrayList<Character> lettersActualTitle = new ArrayList<>();
+		ArrayList<Character> lettersInputTitle = new ArrayList<Character>();
+		ArrayList<Character> lettersActualTitle = new ArrayList<Character>();
 
-		ArrayList<Character> similarCharacters = new ArrayList<>();
-		ArrayList<Character> allCharacters = new ArrayList<>();
+		ArrayList<Character> similarCharacters = new ArrayList<Character>();
+		ArrayList<Character> allCharacters = new ArrayList<Character>();
 
 		for (int i = 0; i < inputTitleNoSpaces.length(); i++) {
 			if (!lettersInputTitle.contains(inputTitleNoSpaces.charAt(i))) {
@@ -154,7 +154,7 @@ public class Book {
 	public ArrayList<String> getSimilarWords(String bookTitle, double similarityMetric,
 											 double commonPercentage, double similarityMetricStandard, double commonPercentageStandard) {
 
-		ArrayList<String> similarBookTitles = new ArrayList<>();
+		ArrayList<String> similarBookTitles = new ArrayList<String>();
 
 		if (similarityMetric > similarityMetricStandard && commonPercentage > commonPercentageStandard) {
 			similarBookTitles.add(bookTitle);

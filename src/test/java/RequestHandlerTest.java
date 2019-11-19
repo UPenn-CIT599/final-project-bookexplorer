@@ -5,7 +5,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.nio.charset.MalformedInputException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,13 +23,28 @@ class RequestHandlerTest {
 
     @Test
     void getAuthorID() {
-        assertEquals("1077326 J.K. Rowling", authorResp);
+        try {
+            Document resp = handler.authorRespDoc("Rowling");
+            String authorID = handler.getAuthorID(resp);
+            assertEquals("1077326", authorID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    void authorRespDoc() {
+    void saveAuthorDetails() {
         try {
-            Document resp = handler.authorRespDoc("Rowling");
+            String authorID = "1077326";
+            Author author = handler.saveAuthorDetails(authorID);
+            assertEquals(author.name, "JK Rowling");
+            assertEquals(author.goodReadsID, "1077326");
+            assertEquals(author.worksCount, 250);
+            assertNotEquals(author.description, "");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -42,7 +56,17 @@ class RequestHandlerTest {
 
     @Test
     void isAuthorFound() {
-        boolean found = handler.isAuthorFound("Arthur Conan Doyle");
-        assertEquals(true, found);
+        Document resp = null;
+        try {
+            resp = handler.authorRespDoc("Rowling");
+            boolean found = handler.isAuthorFound(resp);
+            assertEquals(true, found);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 }
