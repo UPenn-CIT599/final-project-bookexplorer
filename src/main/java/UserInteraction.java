@@ -32,10 +32,6 @@ public class UserInteraction {
 		// Ask for user feedback - if not good, adjust weight of similarity metrics, then give another one
 	}
 
-	public void selectGenre() {
-
-	}
-
 	public String authorInput() {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Please provide an author that you most recently read and enjoyed");

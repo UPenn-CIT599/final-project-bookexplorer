@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -21,15 +23,18 @@ class RequestHandlerTest {
     }
 
     @Test
-    void getAuthor() {
-        //TODO stub below instead of making actual http requests
+    void getAuthorID() {
+        assertEquals("1077326 J.K. Rowling", authorResp);
+    }
+
+    @Test
+    void authorRespDoc() {
         try {
-            String authorResp = handler.getAuthorID("Rowling");
-            assertEquals("1077326 J.K. Rowling", authorResp);
-        } catch (MalformedInputException exp) {
-            System.out.println("Incorrect search author URL");
-        } catch (IOException exp) {
-            System.out.println(exp.getLocalizedMessage());
+            Document resp = handler.authorRespDoc("Rowling");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
