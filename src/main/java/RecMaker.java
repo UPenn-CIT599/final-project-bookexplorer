@@ -67,4 +67,13 @@ public class RecMaker {
 		}
 		return new Book();
 	}
+
+	/**
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public HashMap<String, ArrayList<String>> readGenreAuthorFile(String fileName) {
+		return genreAuthors;
+	}
 }
