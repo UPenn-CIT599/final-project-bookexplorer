@@ -38,15 +38,22 @@ public class RecMaker {
 		} else {
 			currentAuthor = seenAuthorsByID.get(authorID);
 		}
-		ArrayList<String> authorNames = genreAuthors.get(genre);
+		Author mostSimilarAuthor = currentAuthor;
+		ArrayList<String> authorIDs = genreAuthors.get(genre);
 		double maxSimilarity = 0;
-		String mostSimilarAuthor = "";
-		for (String name : authorNames) {
-//			Author newAuthor = handler.getAuthor(name);
-			//TODO: add process to run similarity metrics between 2 authors
-			mostSimilarAuthor = name;
+		for (String id : authorIDs) {
+			Author compareAuthor = seenAuthorsByID.get(id);
+			double similarity = authorSimilarity(currentAuthor, compareAuthor);
+			if (similarity > maxSimilarity) {
+				maxSimilarity = similarity;
+				mostSimilarAuthor = compareAuthor;
+			}
 		}
-		return new Author(mostSimilarAuthor);
+		return mostSimilarAuthor;
+	}
+
+	public double authorSimilarity(Author author1, Author author2) {
+		return 0.0;
 	}
 	
 	/**
@@ -55,6 +62,9 @@ public class RecMaker {
 	 * @return book prediction
 	 */
 	public Book getBookPrediction(Author author) {
+		for (Book book : author.books) {
+
+		}
 		return new Book();
 	}
 }

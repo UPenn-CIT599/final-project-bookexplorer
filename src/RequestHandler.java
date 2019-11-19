@@ -16,7 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class RequestHandler {
 
     /**
-     * Responsibility: makes http request to goodreads API and parses XML responses
+     * Responsibility: makes http request and parses XML responses
      */
 
     String authorSearchApi;
