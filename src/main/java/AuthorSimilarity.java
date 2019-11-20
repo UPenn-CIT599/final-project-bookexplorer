@@ -1,12 +1,11 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class AuthorSimilarity {
 
     Author targetAuthor;
     Author comparedAuthor;
-    ArrayList<Double> weights;
+    HashMap<String, Double> weights;
 
     public double worksCountSim() {
         return ((double) targetAuthor.worksCount) / (comparedAuthor.worksCount);
@@ -18,10 +17,9 @@ public class AuthorSimilarity {
 
     /**
      * Only calculated if both authors have descriptions
-     * @param comparedAuthor
      * @return count of synonyms words / total words
      */
-    public double aboutSim(Author comparedAuthor) {
+    public double aboutSim() {
         // TODO: update below logic
 
         return 0.0;
@@ -30,7 +28,12 @@ public class AuthorSimilarity {
     public AuthorSimilarity(Author targetAuthor, Author comparedAuthor) {
         this.targetAuthor = targetAuthor;
         this.comparedAuthor = comparedAuthor;
-        this.weights = new ArrayList<Double>(Arrays.asList(0.25, 0.25, 0.25, 0.25));
+        this.weights = new HashMap<String, Double>() {{
+            put("followers", 0.25);
+            put("description", 0.25);
+            put("worksCount", 0.25);
+            put("books", 0.25);
+        }};
     }
 
     /**
@@ -59,8 +62,12 @@ public class AuthorSimilarity {
         }
         for (int i = 0; i < booksCount; i++) {
             BookSimilarity sim = new BookSimilarity(targetBooks.get(i), comparedBooks.get(i));
-            totalSimilarities += sim.averageSimilarity();
+            totalSimilarities += sim.weightedSimilarity();
         }
         return totalSimilarities / booksCount;
+    }
+
+    public double weightedSimilarity() {
+        return weights.get("worksCount") * worksCountSim() + weights.get("description") * aboutSim() + weights.get("followers") * followerCountSim() + weights.get("books") * bookSimilarity();
     }
 }
