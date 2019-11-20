@@ -10,11 +10,13 @@ public class RecMaker {
 	/**
 	 * Responsibility: makes author and book recommendations for the user
 	 * Collaborator: UserInteraction, WebScraper, Book, Author
+	 * Process:
 	 */
 
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
 	HashMap<String, Author> seenAuthorsByID;
+	HashMap<String, Author> seenBooksByID;
 
 	public RecMaker() {
 		//TODO - add csv file with author - genre pairs and read from csv file
@@ -65,7 +67,7 @@ public class RecMaker {
 		for (Book book : author.books) {
 
 		}
-		return new Book();
+		return new Book("harry potter");
 	}
 
 	/**
@@ -73,7 +75,7 @@ public class RecMaker {
 	 * @param fileName
 	 * @return
 	 */
-	public HashMap<String, ArrayList<String>> readGenreAuthorFile(String fileName) {
+	public HashMap<String, ArrayList<String>> readGenreAuthorsFile(String fileName) {
 		return genreAuthors;
 	}
 }
