@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * MCIT 591 - Final Project
@@ -14,6 +15,32 @@
  */
 public class SimilarityCalculator {
 	
+	public String suggestedBook;
 	
+	public ArrayList<String> getSimilarBooks(double descriptionSimilarity, double averageRating, int fanCount,
+			int worksCount) {
 
+		ArrayList<String> similarBooks = new ArrayList<>();
+		
+		// Check that bookDescription similarityCounter is above certain amount
+		if (descriptionSimilarity > 0.6) {
+
+			// Compare average ratings of books
+			if (averageRating > 3.0) {
+				
+				// Compare number of fans of author
+				if (fanCount > 500) {
+
+					// Compare works counts of authors
+					if (worksCount > 30) {
+						similarBooks.add(suggestedBook);
+					}
+				}
+			}
+		}
+		
+		return similarBooks;
+		
+	}
+	
 }
