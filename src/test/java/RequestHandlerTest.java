@@ -24,7 +24,7 @@ class RequestHandlerTest {
     @Test
     void getAuthorID() {
         try {
-            Document resp = handler.authorRespDoc("Rowling");
+            Document resp = handler.authorSearchDoc("Rowling");
             String authorID = handler.getAuthorID(resp);
             assertEquals("1077326", authorID);
         } catch (IOException e) {
@@ -58,7 +58,7 @@ class RequestHandlerTest {
     void isAuthorFound() {
         Document resp = null;
         try {
-            resp = handler.authorRespDoc("Rowling");
+            resp = handler.authorSearchDoc("Rowling");
             boolean found = handler.isAuthorFound(resp);
             assertEquals(true, found);
         } catch (IOException e) {
