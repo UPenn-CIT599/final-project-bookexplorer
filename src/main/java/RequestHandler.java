@@ -40,10 +40,8 @@ public class RequestHandler {
      * calls on goodreads API and get author ID and name
      * @param authorSearchDoc Document object for of author search response
      * @return string of response from goodreads API
-     * @throws MalformedURLException
-     * @throws IOException
      */
-    public String getAuthorID(Document authorSearchDoc) throws MalformedURLException, IOException, ParserConfigurationException, SAXException {
+    public String getAuthorID(Document authorSearchDoc) {
         String authorID = authorSearchDoc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
         return authorID;
     }
@@ -115,9 +113,8 @@ public class RequestHandler {
     /**
      * Creates book objects and saves books to the author
      * @param authorDetailDoc author details response obtained from GoodReads API
-     * @param author author object for which the books will be associated with
      */
-    public ArrayList<HashMap<String, String>> getAuthorBooks(Document authorDetailDoc, Author author) throws ParserConfigurationException {
+    public ArrayList<HashMap<String, String>> getAuthorBooks(Document authorDetailDoc) throws ParserConfigurationException {
         NodeList books = authorDetailDoc.getElementsByTagName("book");
         ArrayList booksWithAttributes = new ArrayList<HashMap<String, String>>();
         for (Node bookNode : iterable(books)) {
@@ -158,7 +155,8 @@ public class RequestHandler {
      */
     public Document parseResponse(String respBody) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        InputSource source = new InputSource(new StringReader(respBody));
+        InputSource source = new InputSource();
+        source.setCharacterStream(new StringReader(respBody));
         Document doc = builder.parse(source);
         return doc;
     }
@@ -178,7 +176,7 @@ public class RequestHandler {
 
             public Node next() {
                 if (!hasNext()) {
-                    throw  new NoSuchElementException();
+                    throw new NoSuchElementException();
                 } else {
                     return nodeList.item(index++);
                 }

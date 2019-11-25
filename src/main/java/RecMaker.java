@@ -36,7 +36,7 @@ public class RecMaker {
 		if (!seenAuthorsByID.containsKey(authorID)) {
 			currentAuthor = handler.saveAuthorDetails(authorID);
 			Document authorDetailResp = handler.getAuthorDetail(authorID);
-			ArrayList<HashMap<String, String>> booksAttributes = handler.getAuthorBooks(authorDetailResp, currentAuthor);
+			ArrayList<HashMap<String, String>> booksAttributes = handler.getAuthorBooks(authorDetailResp);
 			saveBooksToAuthor(booksAttributes, currentAuthor);
 			seenAuthorsByID.put(currentAuthor.goodReadsID, currentAuthor);
 		} else {
@@ -84,10 +84,12 @@ public class RecMaker {
 				author.books.add(seenBook);
 			} else {
 				Book newBook = new Book(attributes.get("title"));
+				newBook.goodReadsID = attributes.get("goodReadsID");
 				newBook.authors.add(author);
 				newBook.description = attributes.get("description");
 				newBook.imageUrl = attributes.get("imageURL");
 				newBook.averageRating = Double.valueOf(attributes.get("rating"));
+				seenBooksByID.put(newBook.goodReadsID, newBook);
 			}
 		}
 	}
