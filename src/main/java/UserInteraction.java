@@ -16,7 +16,7 @@ public class UserInteraction {
 	RequestHandler reqHandler;
 
 	public UserInteraction() {
-		this.recMaker = new RecMaker();
+		this.recMaker = new RecMaker("genreAuthors.csv");
 		this.reqHandler = new RequestHandler();
 	}
 
@@ -43,13 +43,13 @@ public class UserInteraction {
 
 	}
 
-	public void recommendAuthorAndBook(String authorName, String genreName) {
+	public void recommendAuthorAndBook(String authorName, String genreName, String bookName) {
 		Author nextAuthor = null;
 		try {
-			Document authorApiResp = reqHandler.authorRespDoc(authorName);
+			Document authorApiResp = reqHandler.authorSearchDoc(authorName);
 			while(!reqHandler.isAuthorFound(authorApiResp)) {
 				authorName = authorInput();
-				authorApiResp = reqHandler.authorRespDoc(authorName);
+				authorApiResp = reqHandler.authorSearchDoc(authorName);
 			}
 			nextAuthor = recMaker.getAuthorPrediction(authorName, genreName);
 		} catch (ParserConfigurationException e) {
@@ -59,6 +59,6 @@ public class UserInteraction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Book nextBook = recMaker.getBookPrediction(nextAuthor);
+		Book nextBook = recMaker.getBookPrediction(nextAuthor, bookName);
 	}
 }
