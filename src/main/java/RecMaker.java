@@ -3,24 +3,21 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class RecMaker {
 	/**
 	 * Responsibility: makes author and book recommendations for the user
 	 * Collaborator: UserInteraction, WebScraper, Book, Author
-	 * Process:
 	 */
 
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
-	HashMap<String, Author> seenAuthorsByID;
-	HashMap<String, Book> seenBooksByID;
+	static HashMap<String, Author> seenAuthorsByID;
+	static HashMap<String, Book> seenBooksByID;
 
 	public RecMaker(String fileName) {
 		//TODO - add csv file with author - genre pairs and read from csv file
-		final ArrayList<String> yaAuthors = new ArrayList(Arrays.asList("JK Rowling"));
 		this.genreAuthors = readGenreAuthorsFile(fileName);
 		this.seenAuthorsByID = new HashMap<String, Author>();
 		this.seenBooksByID = new HashMap<String, Book>();
@@ -48,7 +45,7 @@ public class RecMaker {
 		// find author of the max weighted similarity
 		for (String id : authorIDs) {
 			Author compareAuthor = seenAuthorsByID.get(id);
-			AuthorSimilarity simCalculator = new AuthorSimilarity(currentAuthor, compareAuthor);
+			AuthorSimCalculator simCalculator = new AuthorSimCalculator(currentAuthor, compareAuthor);
 			double similarity = simCalculator.weightedSimilarity();
 			if (similarity > maxSimilarity) {
 				maxSimilarity = similarity;

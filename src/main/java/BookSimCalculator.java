@@ -1,12 +1,12 @@
 import java.util.HashMap;
 
-public class BookSimilarity {
+public class BookSimCalculator {
 
     Book targetBook;
     Book comparedBook;
     HashMap<String, Double> weights;
 
-    public BookSimilarity(Book targetBook, Book comparedBook) {
+    public BookSimCalculator(Book targetBook, Book comparedBook) {
         this.targetBook = targetBook;
         this.comparedBook = comparedBook;
         this.weights = new HashMap<String, Double>() {{

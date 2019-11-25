@@ -27,3 +27,7 @@ Book Explorer is a java application that aims to recommend authors and books to 
         * okhttpclient
             * kotlin-standardlib
             * okio
+
+add user rating as an attribute of the book 
+collaborative filtering - look into other's users books
+linear regression on weights? - need sufficient amount of data, given 5 books, 

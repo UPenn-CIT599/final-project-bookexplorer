@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AuthorSimilarity {
+public class AuthorSimCalculator {
 
     Author targetAuthor;
     Author comparedAuthor;
@@ -25,9 +25,10 @@ public class AuthorSimilarity {
         return 0.0;
     }
 
-    public AuthorSimilarity(Author targetAuthor, Author comparedAuthor) {
+    public AuthorSimCalculator(Author targetAuthor, Author comparedAuthor) {
         this.targetAuthor = targetAuthor;
         this.comparedAuthor = comparedAuthor;
+        // initialize with equal weight
         this.weights = new HashMap<String, Double>() {{
             put("followers", 0.25);
             put("description", 0.25);
@@ -61,7 +62,7 @@ public class AuthorSimilarity {
             comparedBooks.add(comparedAuthor.books.get(i));
         }
         for (int i = 0; i < booksCount; i++) {
-            BookSimilarity sim = new BookSimilarity(targetBooks.get(i), comparedBooks.get(i));
+            BookSimCalculator sim = new BookSimCalculator(targetBooks.get(i), comparedBooks.get(i));
             totalSimilarities += sim.weightedSimilarity();
         }
         return totalSimilarities / booksCount;
