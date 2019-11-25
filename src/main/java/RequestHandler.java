@@ -10,6 +10,8 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.xml.parsers.DocumentBuilder;
@@ -36,13 +38,13 @@ public class RequestHandler {
 
     /**
      * calls on goodreads API and get author ID and name
-     * @param authorRespDoc Document object for response received from API call
+     * @param authorSearchDoc Document object for of author search response
      * @return string of response from goodreads API
      * @throws MalformedURLException
      * @throws IOException
      */
-    public String getAuthorID(Document authorRespDoc) throws MalformedURLException, IOException, ParserConfigurationException, SAXException {
-        String authorID = authorRespDoc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
+    public String getAuthorID(Document authorSearchDoc) throws MalformedURLException, IOException, ParserConfigurationException, SAXException {
+        String authorID = authorSearchDoc.getElementsByTagName("author").item(0).getAttributes().item(0).getTextContent();
         return authorID;
     }
 
@@ -54,7 +56,7 @@ public class RequestHandler {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public Document authorRespDoc(String authorName) throws IOException, SAXException, ParserConfigurationException {
+    public Document authorSearchDoc(String authorName) throws IOException, SAXException, ParserConfigurationException {
         String keyParam = String.format("key=%s", this.developerKey);
         String authorSearchUrl = authorSearchApi + authorName + "?" + keyParam;
         String respBody = sendRequest(authorSearchUrl);
@@ -64,14 +66,11 @@ public class RequestHandler {
 
     /**
      *
-     * @param authorDoc
+     * @param authorSearchDoc
      * @return true if author is found in GoodReads data
-     * @throws IOException
-     * @throws SAXException
-     * @throws ParserConfigurationException
      */
-    public boolean isAuthorFound(Document authorDoc) throws IOException, SAXException, ParserConfigurationException {
-        return authorDoc.getElementsByTagName("name").getLength() > 0;
+    public boolean isAuthorFound(Document authorSearchDoc) {
+        return authorSearchDoc.getElementsByTagName("name").getLength() > 0;
     }
 
     /**
@@ -83,11 +82,7 @@ public class RequestHandler {
      * @throws SAXException
      */
     public Author saveAuthorDetails(String authorID) throws IOException, ParserConfigurationException, SAXException {
-        // form url and make request
-        String keyParam = String.format("format=xml&key=%s", this.developerKey);
-        String url = authorSearchApi + authorID + "?" + keyParam;
-        String respBody = sendRequest(url);
-        Document doc = parseResponse(respBody);
+        Document doc = getAuthorDetail(authorID);
         // parse details of the author from the xml document
         Node author = doc.getElementsByTagName("author").item(0);
         String authorName = author.getChildNodes().item(1).getNodeValue();
@@ -102,24 +97,45 @@ public class RequestHandler {
     }
 
     /**
-     * Creates book objects and saves books to the author
-     * @param authorResp
+     * Make http request to retrieve author details from GoodReads API
+     * @param authorID
+     * @return Document object of response from GoodReads API
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
      */
-    private void saveBooksByAuthors(Document authorResp, Author author) throws ParserConfigurationException {
-        NodeList books = authorResp.getElementsByTagName("book");
+    public Document getAuthorDetail(String authorID) throws IOException, SAXException, ParserConfigurationException {
+        String keyParam = String.format("format=xml&key=%s", this.developerKey);
+        String url = authorDetailApi + authorID + "?" + keyParam;
+        String respBody = sendRequest(url);
+        Document doc = parseResponse(respBody);
+        return doc;
+    }
+
+    /**
+     * Creates book objects and saves books to the author
+     * @param authorDetailDoc author details response obtained from GoodReads API
+     * @param author author object for which the books will be associated with
+     */
+    public ArrayList<HashMap<String, String>> getAuthorBooks(Document authorDetailDoc, Author author) throws ParserConfigurationException {
+        NodeList books = authorDetailDoc.getElementsByTagName("book");
+        ArrayList booksWithAttributes = new ArrayList<HashMap<String, String>>();
         for (Node bookNode : iterable(books)) {
             Document bookDoc = nodeToDoc(bookNode);
             String title = bookDoc.getElementsByTagName("title").item(0).getNodeValue();
             String description = bookDoc.getElementsByTagName("description").item(0).getNodeValue();
             String imageUrl = bookDoc.getElementsByTagName("imageUrl").item(0).getNodeValue();
+            String goodReadsID = bookDoc.getElementsByTagName("id").item(0).getAttributes().item(0).getTextContent();
             double rating = Double.parseDouble(bookDoc.getElementsByTagName("averageRating").item(0).getNodeValue());
-            Book newBook = new Book(title);
-            newBook.authors.add(author);
-            newBook.description = description;
-            newBook.imageUrl = imageUrl;
-            newBook.averageRating = rating;
-            author.books.add(newBook);
+            booksWithAttributes.add(new HashMap<String, String>() {{
+                put("title", title);
+                put("description", description);
+                put("imageURL", imageUrl);
+                put("rating", Double.toString(rating));
+                put("goodReadsID", goodReadsID);
+            }});
         }
+        return booksWithAttributes;
     }
 
     /**
@@ -142,15 +158,14 @@ public class RequestHandler {
      */
     public Document parseResponse(String respBody) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        InputSource source = new InputSource();
-        source.setCharacterStream(new StringReader(respBody));
+        InputSource source = new InputSource(new StringReader(respBody));
         Document doc = builder.parse(source);
         return doc;
     }
 
     /**
      * @param nodeList
-     * @return an iterable instance of nodeList, so forEach can be called on it
+     * @return an iterable instance of nodeList, so forEach can be called on the nodeList
      */
     public static Iterable<Node> iterable(final NodeList nodeList) {
         return () -> new Iterator<Node>() {
