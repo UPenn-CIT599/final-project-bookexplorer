@@ -1,3 +1,4 @@
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,6 +35,9 @@ public class RecMaker {
 		// check if author is seen, if yes, get author, if not, get author information by pulling data from GoodReads API, and save it to seenAuthors hash map
 		if (!seenAuthorsByID.containsKey(authorID)) {
 			currentAuthor = handler.saveAuthorDetails(authorID);
+			Document authorDetailResp = handler.getAuthorDetail(authorID);
+			ArrayList<HashMap<String, String>> booksAttributes = handler.getAuthorBooks(authorDetailResp, currentAuthor);
+			saveBooksToAuthor(booksAttributes, currentAuthor);
 			seenAuthorsByID.put(currentAuthor.goodReadsID, currentAuthor);
 		} else {
 			currentAuthor = seenAuthorsByID.get(authorID);
@@ -65,6 +69,27 @@ public class RecMaker {
 
 		}
 		return new Book("harry potter");
+	}
+
+	/**
+	 * find or create book objects and associates the books with the author
+	 * @param booksAttributes hashmap returned from #getAuthorBooks method from RequestHandler
+	 * @param author
+	 */
+	private void saveBooksToAuthor(ArrayList<HashMap<String, String>> booksAttributes, Author author) {
+		for (HashMap<String, String> attributes : booksAttributes) {
+			if (seenBooksByID.containsKey(attributes.get("goodReadsID"))) {
+				Book seenBook = seenBooksByID.get(attributes.get("goodReadsID"));
+				seenBook.authors.add(author);
+				author.books.add(seenBook);
+			} else {
+				Book newBook = new Book(attributes.get("title"));
+				newBook.authors.add(author);
+				newBook.description = attributes.get("description");
+				newBook.imageUrl = attributes.get("imageURL");
+				newBook.averageRating = Double.valueOf(attributes.get("rating"));
+			}
+		}
 	}
 
 	/**
