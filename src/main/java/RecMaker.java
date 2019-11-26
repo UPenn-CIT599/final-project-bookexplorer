@@ -15,13 +15,13 @@ public class RecMaker {
 	HashMap<String, ArrayList<String>> genreAuthors;
 	RequestHandler handler;
 	static HashMap<String, Author> seenAuthorsByID;
-	static HashMap<String, Book> seenBooksByID;
+	static HashMap<String, Book> seenBooksByTitle;
 
 	public RecMaker(String fileName) {
 		//TODO - add csv file with author - genre pairs and read from csv file
 		this.genreAuthors = readGenreAuthorsFile(fileName);
 		this.seenAuthorsByID = new HashMap<String, Author>();
-		this.seenBooksByID = new HashMap<String, Book>();
+		this.seenBooksByTitle = new HashMap<String, Book>();
 	}
 
 	/**
@@ -65,10 +65,22 @@ public class RecMaker {
 	 * @return book prediction
 	 */
 	public Book getBookPrediction(Author author, String bookTitle) {
-		for (Book book : author.books) {
-
+		Book mostSimilarBook = null;
+		Book originalBook;
+		double maxSimilarity = 0;
+		if(seenBooksByTitle.containsKey(bookTitle)) {
+			originalBook = seenBooksByTitle.get(bookTitle);
+		} else {
+			originalBook = handler.searchBookByTitle(bookTitle);
 		}
-		return new Book("harry potter");
+		for (Book book : author.books) {
+			BookSimCalculator calc = new BookSimCalculator(originalBook, book);
+			if (calc.weightedSimilarity() >= maxSimilarity) {
+				maxSimilarity = calc.weightedSimilarity();
+				mostSimilarBook = book;
+			}
+		}
+		return mostSimilarBook;
 	}
 
 	/**
@@ -78,8 +90,8 @@ public class RecMaker {
 	 */
 	private void saveBooksToAuthor(ArrayList<HashMap<String, String>> booksAttributes, Author author) {
 		for (HashMap<String, String> attributes : booksAttributes) {
-			if (seenBooksByID.containsKey(attributes.get("goodReadsID"))) {
-				Book seenBook = seenBooksByID.get(attributes.get("goodReadsID"));
+			if (seenBooksByTitle.containsKey(attributes.get("title"))) {
+				Book seenBook = seenBooksByTitle.get(attributes.get("title"));
 				seenBook.authors.add(author);
 				author.books.add(seenBook);
 			} else {
@@ -89,7 +101,7 @@ public class RecMaker {
 				newBook.description = attributes.get("description");
 				newBook.imageUrl = attributes.get("imageURL");
 				newBook.averageRating = Double.valueOf(attributes.get("rating"));
-				seenBooksByID.put(newBook.goodReadsID, newBook);
+				seenBooksByTitle.put(newBook.goodReadsID, newBook);
 			}
 		}
 	}

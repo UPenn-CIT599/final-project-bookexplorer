@@ -94,6 +94,11 @@ public class RequestHandler {
         return newAuthor;
     }
 
+    //TODO: add implementation for below
+    public Book searchBookByTitle(String title) {
+        return new Book("Born a crime");
+    }
+
     /**
      * Make http request to retrieve author details from GoodReads API
      * @param authorID
