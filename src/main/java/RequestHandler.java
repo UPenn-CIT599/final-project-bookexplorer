@@ -2,6 +2,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -82,9 +83,11 @@ public class RequestHandler {
     public Author saveAuthorDetails(String authorID) throws IOException, ParserConfigurationException, SAXException {
         Document doc = getAuthorDetail(authorID);
         // parse details of the author from the xml document
-        Node author = doc.getElementsByTagName("author").item(0);
-        String authorName = author.getChildNodes().item(1).getNodeValue();
-        int worksCount = Integer.parseInt(doc.getElementsByTagName("works_count").item(0).getNodeValue());
+        Element author = (Element) doc.getElementsByTagName("author").item(0);
+        String authorName = author.getElementsByTagName("name").item(0).getTextContent();
+        //TODO: update below like how author name was parsed
+        String worksNum = doc.getElementsByTagName("works_count").item(0).getNodeValue();
+        int worksCount = Integer.parseInt(worksNum);
         String description = doc.getElementsByTagName("about").item(0).getNodeValue();
         Author newAuthor = new Author(authorName);
         // associate the attributes with the new author object
@@ -124,11 +127,11 @@ public class RequestHandler {
         ArrayList booksWithAttributes = new ArrayList<HashMap<String, String>>();
         for (Node bookNode : iterable(books)) {
             Document bookDoc = nodeToDoc(bookNode);
-            String title = bookDoc.getElementsByTagName("title").item(0).getNodeValue();
-            String description = bookDoc.getElementsByTagName("description").item(0).getNodeValue();
-            String imageUrl = bookDoc.getElementsByTagName("imageUrl").item(0).getNodeValue();
+            String title = bookDoc.getElementsByTagName("title").item(0).getTextContent();
+            String description = bookDoc.getElementsByTagName("description").item(0).getTextContent();
+            String imageUrl = bookDoc.getElementsByTagName("image_url").item(0).getTextContent();
             String goodReadsID = bookDoc.getElementsByTagName("id").item(0).getAttributes().item(0).getTextContent();
-            double rating = Double.parseDouble(bookDoc.getElementsByTagName("averageRating").item(0).getNodeValue());
+            double rating = Double.parseDouble(bookDoc.getElementsByTagName("average_rating").item(0).getTextContent());
             booksWithAttributes.add(new HashMap<String, String>() {{
                 put("title", title);
                 put("description", description);
@@ -156,13 +159,14 @@ public class RequestHandler {
     /**
      * private method that parses XML response strings
      * @param respBody
-     * @return document that can be further
+     * @return document that can be further parsed
      */
     public Document parseResponse(String respBody) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource source = new InputSource();
         source.setCharacterStream(new StringReader(respBody));
         Document doc = builder.parse(source);
+        doc.getDocumentElement().normalize();
         return doc;
     }
 

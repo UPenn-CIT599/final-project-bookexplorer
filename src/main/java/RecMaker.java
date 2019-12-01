@@ -2,9 +2,13 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class RecMaker {
 	/**
@@ -112,6 +116,22 @@ public class RecMaker {
 	 * @return
 	 */
 	public HashMap<String, ArrayList<String>> readGenreAuthorsFile(String fileName) {
+		File dataFile = new File(fileName);
+		Scanner fileScanner = null;
+		try {
+			fileScanner = new Scanner(dataFile);
+		} catch (FileNotFoundException e) {
+			System.out.println(String.format("File %s not found, exiting the program", fileName));
+			System.exit(0);
+		}
+		fileScanner.nextLine();
+		while (fileScanner.hasNextLine()) {
+			String[] genreAuthorsArray = fileScanner.nextLine().split(",");
+			String genre = genreAuthorsArray[0];
+			for (String authorName : Arrays.copyOfRange(genreAuthorsArray, 1, genreAuthorsArray.length)) {
+				genreAuthors.put(genre, new ArrayList<>(Arrays.asList(Arrays.copyOfRange(genreAuthorsArray, 1, genreAuthorsArray.length))));
+			}
+		}
 		return genreAuthors;
 	}
 }
