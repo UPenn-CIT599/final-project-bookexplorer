@@ -42,7 +42,7 @@ public class AuthorSimCalculator {
      * if an author has < 5 books, then take the lesser of 5 or author's books count.
      * @return average book similarities between 2 authors
      */
-    public double bookSimilarity() {
+    public double booksSimilarity() {
         int booksCount = 5;
         ArrayList<Book> targetBooks = new ArrayList<Book>();
         ArrayList<Book> comparedBooks = new ArrayList<Book>();
@@ -69,6 +69,6 @@ public class AuthorSimCalculator {
     }
 
     public double weightedSimilarity() {
-        return weights.get("worksCount") * worksCountSim() + weights.get("description") * aboutSim() + weights.get("followers") * followerCountSim() + weights.get("books") * bookSimilarity();
+        return weights.get("worksCount") * worksCountSim() + weights.get("description") * aboutSim() + weights.get("followers") * followerCountSim() + weights.get("books") * booksSimilarity();
     }
 }

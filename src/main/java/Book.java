@@ -8,6 +8,7 @@ public class Book {
 	double averageRating;
 	int ratingsCount;
 	int pagesNum;
+	int publicationYear;
 	String goodReadsID;
 	ArrayList<Author> authors;
 
@@ -18,6 +19,7 @@ public class Book {
 		this.averageRating = 0.0;
 		this.ratingsCount = 0;
 		this.pagesNum = 0;
+		this.publicationYear = 0;
 		this.goodReadsID = "";
 		this.authors = new ArrayList<Author>();
 	}
@@ -25,6 +27,6 @@ public class Book {
 	@Override
 	public boolean equals(Object comparedBook) {
 		Book compared = (Book) comparedBook;
-		return compared.title.equals(title) && compared.goodReadsID.equals(goodReadsID);
+		return compared.title.equals(title) && compared.goodReadsID.equals(goodReadsID) && (compared.publicationYear == publicationYear);
 	}
 }

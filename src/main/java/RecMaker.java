@@ -70,12 +70,20 @@ public class RecMaker {
 	 */
 	public Book getBookPrediction(Author author, String bookTitle) {
 		Book mostSimilarBook = null;
-		Book originalBook;
+		Book originalBook = new Book(bookTitle);
 		double maxSimilarity = 0;
 		if(seenBooksByTitle.containsKey(bookTitle)) {
 			originalBook = seenBooksByTitle.get(bookTitle);
 		} else {
-			originalBook = handler.searchBookByTitle(bookTitle);
+			try {
+				originalBook = handler.searchBookByTitle(bookTitle);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			}
 		}
 		for (Book book : author.books) {
 			BookSimCalculator calc = new BookSimCalculator(originalBook, book);
