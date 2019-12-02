@@ -43,10 +43,9 @@ class RequestHandlerTest {
         try {
             String authorID = "1077326";
             Author author = handler.saveAuthorDetails(authorID);
-            assertEquals(author.name, "JK Rowling");
-            assertEquals(author.goodReadsID, "1077326");
-            assertEquals(author.worksCount, 250);
-            assertNotEquals(author.description, "");
+            assertEquals("J.K. Rowling", author.name);
+            assertEquals("1077326", author.goodReadsID);
+            assertNotEquals("", author.description);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -77,12 +76,28 @@ class RequestHandlerTest {
             Document authorDetail = handler.getAuthorDetail("18210028");
             ArrayList<HashMap<String, String>> booksAttributes = handler.getAuthorBooks(authorDetail);
             assertEquals("The Donald J. Trump Presidential Twitter Library", booksAttributes.get(0).get("title"));
-            assertEquals(4.00, booksAttributes.get(0).get("rating"));
+            assertEquals("4.0", booksAttributes.get(0).get("rating"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void searchBookByTitle() {
+        try {
+            Book searched = handler.searchBookByTitle("Pride and Prejudice");
+            assertEquals("1885", searched.goodReadsID);
+            assertEquals("Pride and Prejudice", searched.title);
+            assertEquals(1813, searched.publicationYear);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
             e.printStackTrace();
         }
     }
