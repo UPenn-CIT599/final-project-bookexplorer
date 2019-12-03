@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AuthorSimCalculatorTest {
 
-    @BeforeEach
+    @org.junit.jupiter.api.BeforeEach
     void setUp() {
     }
 

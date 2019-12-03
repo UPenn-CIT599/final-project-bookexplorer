@@ -10,7 +10,7 @@ import java.util.*;
 public class RecMaker {
 	/**
 	 * Responsibility: makes author and book recommendations for the user
-	 * Collaborator: UserInteraction, WebScraper, Book, Author
+	 * Collaborator: UserInteraction, Book, Author, RequestHandler
 	 */
 
 	HashMap<String, ArrayList<String>> genreAuthors;
@@ -44,11 +44,22 @@ public class RecMaker {
 		}
 		Author mostSimilarAuthor = currentAuthor;
 		// get list of authors from the same genre
-		ArrayList<String> authorIDs = genreAuthors.get(genre);
+		ArrayList<String> authorNames = genreAuthors.get(genre);
+		ArrayList<String> authorIDs = new ArrayList<String>();
+		for (String name : authorNames) {
+			authorIDs.add(handler.getAuthorID(handler.authorSearchDoc(name)));
+		}
 		double maxSimilarity = 0;
 		// find author of the max weighted similarity
 		for (String id : authorIDs) {
-			Author compareAuthor = seenAuthorsByID.get(id);
+			Author compareAuthor = null;
+			if (seenAuthorsByID.containsKey(id)) {
+				compareAuthor = seenAuthorsByID.get(id);
+
+			} else {
+				compareAuthor = handler.saveAuthorDetails(id);
+				seenAuthorsByID.put(id, compareAuthor);
+			}
 			AuthorSimCalculator simCalculator = new AuthorSimCalculator(currentAuthor, compareAuthor);
 			double similarity = simCalculator.weightedSimilarity();
 			if (similarity > maxSimilarity) {
@@ -96,7 +107,7 @@ public class RecMaker {
 	/**
 	 * find or create book objects and associates the books with the author
 	 * @param booksAttributes hashmap returned from #getAuthorBooks method from RequestHandler
-	 * @param author
+	 * @param author - author object who needs book associations
 	 */
 	private void saveBooksToAuthor(ArrayList<HashMap<String, String>> booksAttributes, Author author) {
 		for (HashMap<String, String> attributes : booksAttributes) {
