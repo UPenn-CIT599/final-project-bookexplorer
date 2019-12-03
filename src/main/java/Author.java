@@ -6,15 +6,19 @@ public class Author {
 	public String description;
 	public String goodReadsID;
 	public int worksCount;
+	public int followersCount;
 	public String genre;
 	public ArrayList<Book> books;
 
 
 	public Author(String name) {
 		this.name = name;
+		this.followersCount = 0;
 		this.worksCount = 0;
 		this.books = new ArrayList<Book>();
 		this.description = "";
+		this.goodReadsID = "";
+		this.genre = "";
 	}
 
 	@Override

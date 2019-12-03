@@ -1,31 +1,14 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AuthorSimCalculator {
+public class AuthorSimCalculator extends BookSimCalculator {
 
     Author targetAuthor;
     Author comparedAuthor;
     HashMap<String, Double> weights;
 
-    public double worksCountSim() {
-        return ((double) targetAuthor.worksCount) / (comparedAuthor.worksCount);
-    }
-
-    public double followerCountSim() {
-        return ((double) targetAuthor.worksCount) / (comparedAuthor.worksCount);
-    }
-
-    /**
-     * Only calculated if both authors have descriptions
-     * @return count of synonyms words / total words
-     */
-    public double aboutSim() {
-        // TODO: update below logic
-
-        return 0.0;
-    }
-
     public AuthorSimCalculator(Author targetAuthor, Author comparedAuthor) {
+        super();
         this.targetAuthor = targetAuthor;
         this.comparedAuthor = comparedAuthor;
         // initialize with equal weight
@@ -69,6 +52,8 @@ public class AuthorSimCalculator {
     }
 
     public double weightedSimilarity() {
-        return weights.get("worksCount") * worksCountSim() + weights.get("description") * aboutSim() + weights.get("followers") * followerCountSim() + weights.get("books") * booksSimilarity();
+        double worksCountSim = weights.get("worksCount") * singleSimCalc(comparedAuthor.worksCount, targetAuthor.worksCount);
+        double followersCountSim = weights.get("followers") * singleSimCalc(comparedAuthor.followersCount, targetAuthor.followersCount);
+        return worksCountSim + followersCountSim + weights.get("books") * booksSimilarity();
     }
 }
