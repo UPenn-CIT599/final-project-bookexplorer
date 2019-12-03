@@ -6,6 +6,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,6 +109,20 @@ class RequestHandlerTest {
             assertEquals("1885", searched.goodReadsID);
             assertEquals("Pride and Prejudice", searched.title);
             assertEquals(1813, searched.publicationYear);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void getSynonyms() {
+        ArrayList<String> expectedSyn = new ArrayList<>(Arrays.asList("adjudicator", "arbiter", "arbitrator", "referee", "umpire"));
+        try {
+            assertEquals(expectedSyn, handler.getSynonyms("umpire"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {

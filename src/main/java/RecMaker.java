@@ -22,7 +22,6 @@ public class RecMaker {
 	static HashMap<String, Book> seenBooksByTitle;
 
 	public RecMaker(String fileName) {
-		//TODO - add csv file with author - genre pairs and read from csv file
 		this.genreAuthors = readGenreAuthorsFile(fileName);
 		this.seenAuthorsByID = new HashMap<String, Author>();
 		this.seenBooksByTitle = new HashMap<String, Book>();
@@ -78,6 +77,7 @@ public class RecMaker {
 			try {
 				Document bookSearchResp = handler.getBookSearchResp(bookTitle);
 				originalBook = handler.getBookFromBookSearch(bookSearchResp);
+				handler.saveBookDescription(originalBook);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParserConfigurationException e) {
@@ -136,7 +136,8 @@ public class RecMaker {
 		fileScanner.nextLine();
 		while (fileScanner.hasNextLine()) {
 			String[] genreAuthorsArray = fileScanner.nextLine().split(",");
-			String genre = genreAuthorsArray[0];
+			String author = genreAuthorsArray[0];
+			String genre = genreAuthorsArray[1];
 			for (String authorName : Arrays.copyOfRange(genreAuthorsArray, 1, genreAuthorsArray.length)) {
 				genreAuthors.put(genre, new ArrayList<>(Arrays.asList(Arrays.copyOfRange(genreAuthorsArray, 1, genreAuthorsArray.length))));
 			}

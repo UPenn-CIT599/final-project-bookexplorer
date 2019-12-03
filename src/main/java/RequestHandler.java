@@ -10,13 +10,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import javax.print.Doc;
+import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -29,13 +23,15 @@ public class RequestHandler {
 
     private String authorSearchApi;
     private String authorDetailApi;
-    private String developerKey;
+    private String goodReadsDevKey;
+    private String mwDevKey;
     private OkHttpClient client;
 
     public RequestHandler() {
         this.authorSearchApi = "https://www.goodreads.com/api/author_url/";
         this.authorDetailApi = "https://www.goodreads.com/author/show/";
-        this.developerKey = "GFGG3YidZvZxbGosF8DWA";
+        this.goodReadsDevKey = "GFGG3YidZvZxbGosF8DWA";
+        this.mwDevKey = "3555fca8-0edd-4221-b637-10a361f3ecee";
         this.client = new OkHttpClient();
     }
 
@@ -58,7 +54,7 @@ public class RequestHandler {
      * @throws ParserConfigurationException
      */
     public Document authorSearchDoc(String authorName) throws IOException, SAXException, ParserConfigurationException {
-        String keyParam = String.format("key=%s", this.developerKey);
+        String keyParam = String.format("key=%s", this.goodReadsDevKey);
         String authorSearchUrl = authorSearchApi + authorName + "?" + keyParam;
         String respBody = sendRequest(authorSearchUrl);
         Document doc = parseResponse(respBody);
@@ -66,8 +62,7 @@ public class RequestHandler {
     }
 
     /**
-     *
-     * @param authorSearchDoc
+     * @param authorSearchDoc - search response from goodReads API
      * @return true if author is found in GoodReads data
      */
     public boolean isAuthorFound(Document authorSearchDoc) {
@@ -102,6 +97,29 @@ public class RequestHandler {
         return newAuthor;
     }
 
+    public ArrayList<String> getSynonyms(String word) throws IOException, ParserConfigurationException, SAXException {
+        String requestUrl = String.format("https://www.dictionaryapi.com/api/v3/references/thesaurus/xml/%s?key=%s", word, mwDevKey);
+        String resp = sendRequest(requestUrl);
+        Document respDoc = parseResponse(resp);
+        String synonyms = ((Element) respDoc.getElementsByTagName("sens").item(0)).getElementsByTagName("syn").item(0).getTextContent();
+        return new ArrayList<>(Arrays.asList(synonyms.split(", ")));
+    }
+
+    /**
+     * adds additional details to book object that's not available in the book search response
+     * @param book - book object
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
+    public void saveBookDescription(Book book) throws IOException, ParserConfigurationException, SAXException {
+        String bookDetailUrl = String.format("https://www.goodreads.com/book/show/%s.xml?key=%s", book.goodReadsID, goodReadsDevKey);
+        String respBody = sendRequest(bookDetailUrl);
+        Document respDoc = parseResponse(respBody);
+        Element bookElement = (Element) respDoc.getElementsByTagName("book").item(0);
+        book.description = bookElement.getElementsByTagName("description").item(0).getTextContent();
+    }
+
     /**
      * parses book search result XML from the goodreads book search API
      * @param bookSearchDoc - book search API response, Document object
@@ -115,24 +133,34 @@ public class RequestHandler {
         String bookTitle = book.getElementsByTagName("title").item(0).getTextContent();
         String bookId = book.getElementsByTagName("id").item(0).getTextContent();
         String ratingsCount = ((Element) work).getElementsByTagName("ratings_count").item(0).getTextContent();
+        String ratings = ((Element) work).getElementsByTagName("average_rating").item(0).getTextContent();
         String publicationYear = ((Element) work).getElementsByTagName("original_publication_year").item(0).getTextContent();
         Book newBook = new Book(bookTitle);
         newBook.ratingsCount = Integer.parseInt(ratingsCount);
         newBook.goodReadsID = bookId;
+        newBook.averageRating = Double.parseDouble(ratings);
         newBook.publicationYear = Integer.parseInt(publicationYear);
         return newBook;
     }
 
+    /**
+     * Forms request url, makes book search request and returns api response
+     * @param title - book title string from user input
+     * @return response Document object
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
     public Document getBookSearchResp(String title) throws IOException, SAXException, ParserConfigurationException {
         String formattedTitle = title.replaceAll(" ", "+").replaceAll("\'", "%27");
-        String requestUrl = String.format("https://www.goodreads.com/search/index.xml?key=%s&q=%s", this.developerKey, formattedTitle);
+        String requestUrl = String.format("https://www.goodreads.com/search/index.xml?key=%s&q=%s", this.goodReadsDevKey, formattedTitle);
         String respBody = sendRequest(requestUrl);
         Document respDoc = parseResponse(respBody);
         return respDoc;
     }
 
     /**
-     * Make http request to retrieve author details from GoodReads API
+     * Forms request url, makes http request and returns api response
      * @param authorID
      * @return Document object of response from GoodReads API
      * @throws IOException
@@ -140,7 +168,7 @@ public class RequestHandler {
      * @throws ParserConfigurationException
      */
     public Document getAuthorDetail(String authorID) throws IOException, SAXException, ParserConfigurationException {
-        String keyParam = String.format("format=xml&key=%s", this.developerKey);
+        String keyParam = String.format("format=xml&key=%s", this.goodReadsDevKey);
         String url = authorDetailApi + authorID + "?" + keyParam;
         String respBody = sendRequest(url);
         Document doc = parseResponse(respBody);
@@ -186,9 +214,9 @@ public class RequestHandler {
     }
 
     /**
-     * private method that parses XML response strings
-     * @param respBody
-     * @return document that can be further parsed
+     * parses XML response strings
+     * @param respBody string of xml response
+     * @return document that can be further parsed by tag name
      */
     private Document parseResponse(String respBody) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
