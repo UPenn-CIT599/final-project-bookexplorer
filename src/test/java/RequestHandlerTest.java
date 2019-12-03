@@ -71,6 +71,20 @@ class RequestHandlerTest {
     }
 
     @Test
+    void isBookFound() {
+        try {
+            Document resp = handler.getBookSearchResp("Tipping Point");
+            assertEquals(true, handler.isBookFound(resp));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     void getAuthorBooks() {
         try {
             Document authorDetail = handler.getAuthorDetail("18210028");
@@ -89,7 +103,8 @@ class RequestHandlerTest {
     @Test
     void searchBookByTitle() {
         try {
-            Book searched = handler.searchBookByTitle("Pride and Prejudice");
+            Document resp = handler.getBookSearchResp("Pride and Prejudice");
+            Book searched = handler.getBookFromBookSearch(resp);
             assertEquals("1885", searched.goodReadsID);
             assertEquals("Pride and Prejudice", searched.title);
             assertEquals(1813, searched.publicationYear);

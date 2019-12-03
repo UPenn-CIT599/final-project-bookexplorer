@@ -3,6 +3,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class UserInteraction {
@@ -21,44 +22,57 @@ public class UserInteraction {
 	}
 
 	public static void main(String[] args) {
-		// To user: select a genre from dropdown menu that they recently read
-		// To user: Please provide an author that you most recently read and enjoyed
-		// To user: please provide a book that you most recently read and enjoyed
-		// Run similarity metrics of authors the user input, with our list of authors
-		// pick an author recommended by our algo
-		// pick a book by the author similar to the book that user provided
-		// Return recommended author, with image and short description
-		// Return recommended author's book, with image and short description, amazon link, etc.
-		// Ask for user feedback - if not good, adjust weight of similarity metrics, then give another one
+		UserInteraction interacter = new UserInteraction();
+		String authorName = interacter.getInputFromUser("Please provide the name of an author whom you most recently read");
+		String bookName = interacter.getInputFromUser("Please provide the name of a book that you most recently read:");
+		String genre = interacter.getInputFromUser("Please provide a genre: ");
+		interacter.recommendAuthorAndBook(authorName, genre, bookName);
 	}
 
-	public String authorInput() {
+	public String getInputFromUser(String phrase) {
 		Scanner in = new Scanner(System.in);
-		System.out.println("Please provide an author that you most recently read and enjoyed");
-		String authorName = in.nextLine();
-		return authorName;
+		System.out.println(phrase);
+		String input = in.nextLine();
+		in.close();
+		return input;
 	}
 
-	public void bookInput() {
-
-	}
-
-	public void recommendAuthorAndBook(String authorName, String genreName, String bookName) {
+	/**
+	 *
+	 * @param authorName
+	 * @param genreName
+	 * @param bookTitle
+	 * @return a hash map of {"Book": suggestedBook, "Author": suggestedAuthor}
+	 */
+	public HashMap<String, Object> recommendAuthorAndBook(String authorName, String genreName, String bookTitle) {
 		Author nextAuthor = null;
+		Book nextBook = null;
 		try {
-			Document authorApiResp = reqHandler.authorSearchDoc(authorName);
-			while(!reqHandler.isAuthorFound(authorApiResp)) {
-				authorName = authorInput();
-				authorApiResp = reqHandler.authorSearchDoc(authorName);
+			Document authorSearchResp = reqHandler.authorSearchDoc(authorName);
+			while (!reqHandler.isAuthorFound(authorSearchResp)) {
+				authorName = getInputFromUser("Sorry, we couldn't find your author. Please input a new author name: ");
+				authorSearchResp = reqHandler.authorSearchDoc(authorName);
 			}
-			nextAuthor = recMaker.getAuthorPrediction(authorName, genreName);
+			Document bookSearchResp = reqHandler.getBookSearchResp(bookTitle);
+			while (!reqHandler.isBookFound(bookSearchResp)) {
+				bookTitle = getInputFromUser("Sorry, we couldn't find your book. Please input a new book name: ");
+				bookSearchResp = reqHandler.getBookSearchResp(bookTitle);
+			}
+			String authorID = reqHandler.getAuthorID(authorSearchResp);
+			nextAuthor = recMaker.getAuthorPrediction(authorID, genreName);
+			nextBook = recMaker.getBookPrediction(nextAuthor, bookTitle);
 		} catch (ParserConfigurationException e) {
-			System.out.println("Error finding your author, please try again");
+			e.printStackTrace();
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Book nextBook = recMaker.getBookPrediction(nextAuthor, bookName);
+		Author finalNextAuthor = nextAuthor;
+		Book finalNextBook = nextBook;
+		return new HashMap<String, Object>() {{
+			put("Author", finalNextAuthor);
+			put("Book", finalNextBook);
+		}};
 	}
 }

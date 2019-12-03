@@ -27,10 +27,10 @@ public class RequestHandler {
      * Responsibility: makes http request and parses XML responses
      */
 
-    String authorSearchApi;
-    String authorDetailApi;
-    String developerKey;
-    OkHttpClient client;
+    private String authorSearchApi;
+    private String authorDetailApi;
+    private String developerKey;
+    private OkHttpClient client;
 
     public RequestHandler() {
         this.authorSearchApi = "https://www.goodreads.com/api/author_url/";
@@ -74,6 +74,11 @@ public class RequestHandler {
         return authorSearchDoc.getElementsByTagName("name").getLength() > 0;
     }
 
+    public boolean isBookFound(Document bookSearchDoc) {
+        int resultCount = ((Element) bookSearchDoc.getElementsByTagName("search").item(0)).getElementsByTagName("results").getLength();
+        return resultCount > 0;
+    }
+
     /**
      * Associates info from GoodReads to author attributes
      * @param authorID
@@ -98,12 +103,11 @@ public class RequestHandler {
     }
 
     /**
-     * returns search result from the goodreads book search API
-     * @param title - book title string
-     * @return created book object with searched title
+     * parses book search result XML from the goodreads book search API
+     * @param bookSearchDoc - book search API response, Document object
+     * @return book object that's created from searched book title, with book attributes
      */
-    public Book searchBookByTitle(String title) throws IOException, ParserConfigurationException, SAXException {
-        Document bookSearchDoc = getBookSearchResp(title);
+    public Book getBookFromBookSearch(Document bookSearchDoc) {
         Element bookResults = (Element) bookSearchDoc.getElementsByTagName("results").item(0);
         Element work = (Element) bookResults.getElementsByTagName("work").item(0);
         Element workElement = (Element) work;
@@ -119,7 +123,7 @@ public class RequestHandler {
         return newBook;
     }
 
-    private Document getBookSearchResp(String title) throws IOException, SAXException, ParserConfigurationException {
+    public Document getBookSearchResp(String title) throws IOException, SAXException, ParserConfigurationException {
         String formattedTitle = title.replaceAll(" ", "+").replaceAll("\'", "%27");
         String requestUrl = String.format("https://www.goodreads.com/search/index.xml?key=%s&q=%s", this.developerKey, formattedTitle);
         String respBody = sendRequest(requestUrl);

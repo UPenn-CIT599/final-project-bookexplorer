@@ -76,7 +76,8 @@ public class RecMaker {
 			originalBook = seenBooksByTitle.get(bookTitle);
 		} else {
 			try {
-				originalBook = handler.searchBookByTitle(bookTitle);
+				Document bookSearchResp = handler.getBookSearchResp(bookTitle);
+				originalBook = handler.getBookFromBookSearch(bookSearchResp);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParserConfigurationException e) {
