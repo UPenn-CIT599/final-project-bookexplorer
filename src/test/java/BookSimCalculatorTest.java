@@ -16,7 +16,8 @@ class BookSimCalculatorTest {
 
     @Test
     void descriptionSim() {
-
+        Book book1 = new Book("Pride and Prejudice");
+        book1.description = "";
     }
 
     @Test

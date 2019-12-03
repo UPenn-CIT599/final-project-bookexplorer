@@ -5,10 +5,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class RecMaker {
 	/**
@@ -120,7 +117,7 @@ public class RecMaker {
 	}
 
 	/**
-	 * read data file that contains genre -> author names
+	 * read data file that contains genre -> author name
 	 * @param fileName
 	 * @return
 	 */
@@ -138,8 +135,10 @@ public class RecMaker {
 			String[] genreAuthorsArray = fileScanner.nextLine().split(",");
 			String author = genreAuthorsArray[0];
 			String genre = genreAuthorsArray[1];
-			for (String authorName : Arrays.copyOfRange(genreAuthorsArray, 1, genreAuthorsArray.length)) {
-				genreAuthors.put(genre, new ArrayList<>(Arrays.asList(Arrays.copyOfRange(genreAuthorsArray, 1, genreAuthorsArray.length))));
+			if (genreAuthors.containsKey(genre)) {
+				genreAuthors.get(genre).add(author);
+			} else {
+				genreAuthors.put(genre, new ArrayList<String>(Arrays.asList(author)));
 			}
 		}
 		return genreAuthors;

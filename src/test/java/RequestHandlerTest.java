@@ -131,4 +131,24 @@ class RequestHandlerTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void saveBookDescription() {
+        Book book1 = new Book("Pride and Prejudice");
+        book1.goodReadsID = "1885";
+        book1.ratingsCount = 2676768;
+        book1.publicationYear = 1813;
+        book1.averageRating = 4.26;
+        book1.pagesNum = 279;
+        try {
+            handler.saveBookDescription(book1);
+            assertEquals("Alternate cover edition of ISBN 9780679783268</i><br /><br />Since its immediate success in 1813, <i>Pride and Prejudice</i> has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \"as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.", book1.description);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+    }
 }
