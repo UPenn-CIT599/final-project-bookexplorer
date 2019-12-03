@@ -117,7 +117,8 @@ public class RequestHandler {
         String respBody = sendRequest(bookDetailUrl);
         Document respDoc = parseResponse(respBody);
         Element bookElement = (Element) respDoc.getElementsByTagName("book").item(0);
-        book.description = bookElement.getElementsByTagName("description").item(0).getTextContent();
+        String description = bookElement.getElementsByTagName("description").item(0).getTextContent();
+        book.description = description.replaceAll("<.{1,5}>", " ");
     }
 
     /**

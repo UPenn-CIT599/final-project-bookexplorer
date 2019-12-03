@@ -20,10 +20,6 @@ class RequestHandlerTest {
         handler = new RequestHandler();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void getAuthorID() {
         try {
@@ -142,7 +138,7 @@ class RequestHandlerTest {
         book1.pagesNum = 279;
         try {
             handler.saveBookDescription(book1);
-            assertEquals("Alternate cover edition of ISBN 9780679783268</i><br /><br />Since its immediate success in 1813, <i>Pride and Prejudice</i> has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \"as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.", book1.description);
+            assertEquals("Alternate cover edition of ISBN 9780679783268 Since its immediate success in 1813, Pride and Prejudice has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \"as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.", book1.description);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
