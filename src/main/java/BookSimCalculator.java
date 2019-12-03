@@ -1,3 +1,9 @@
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class BookSimCalculator {
@@ -13,6 +19,7 @@ public class BookSimCalculator {
     Book targetBook;
     Book comparedBook;
     HashMap<String, Double> weights;
+    RequestHandler handler;
 
     public BookSimCalculator(Book targetBook, Book comparedBook) {
         this.targetBook = targetBook;
@@ -24,6 +31,7 @@ public class BookSimCalculator {
             put("description", 0.2);
             put("publicationYear", 0.2);
         }};
+        this.handler = new RequestHandler();
     }
 
     public BookSimCalculator() {
@@ -31,15 +39,39 @@ public class BookSimCalculator {
     }
 
     public double descriptionSim() {
-        //TODO update below
-        return 1.0;
+        int synCount = 0;
+        ArrayList<String> descriptionWords1 = descriptionToWords(comparedBook.description);
+        ArrayList<String> descriptionWords2 = descriptionToWords(targetBook.description);
+        for(String word : descriptionWords1) {
+            if (descriptionWords2.contains(word)) {
+                synCount++;
+            } else {
+                ArrayList<String> synonyms = null;
+                try {
+                    synonyms = handler.getSynonyms(word);
+                    for (String syn : synonyms) {
+                        if (descriptionWords2.contains(syn)) {
+                            synCount += 1;
+                            break;
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println(String.format("An error occurred while calling the synonyms API: %s", e.getMessage()));
+                } catch (ParserConfigurationException e) {
+                    System.out.println(String.format("An error occurred while calling the synonyms API: %s", e.getMessage()));
+                } catch (SAXException e) {
+                    System.out.println(String.format("An error occurred while calling the synonyms API: %s", e.getMessage()));
+                }
+            }
+        }
+        return ((double) synCount) / (descriptionWords1.size() + descriptionWords2.size());
     }
 
     /**
      * returns 0 if 2 attributes are most similar, and 1 if least similar
      * @param num1 - attribute from first book
      * @param num2 - attribute from second book
-     * @return
+     * @return a double between 0 to 1
      */
     public double singleSimCalc(double num1, double num2) {
         if (num1 == 0 && num2 == 0) {
@@ -60,5 +92,15 @@ public class BookSimCalculator {
         double bookLengthSim = weights.get("bookLength") * singleSimCalc(comparedBook.pagesNum, targetBook.pagesNum);
         double descriptionSim = weights.get("description") * descriptionSim();
         return 1 - (ratingsSim + ratingsCountSim + publicationYearSim + bookLengthSim + descriptionSim);
+    }
+
+    /**
+     * removes non-word characters from description and returns an array list of words
+     * @param description
+     * @return
+     */
+    private ArrayList<String> descriptionToWords(String description) {
+        ArrayList<String> cleanWords = new ArrayList<>(Arrays.asList(description.replaceAll("[^a-zA-Z]", "").toLowerCase().split(" ")));
+        return cleanWords;
     }
 }
