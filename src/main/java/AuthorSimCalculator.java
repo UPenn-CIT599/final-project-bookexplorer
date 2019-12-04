@@ -13,10 +13,9 @@ public class AuthorSimCalculator extends BookSimCalculator {
         this.comparedAuthor = comparedAuthor;
         // initialize with equal weight
         this.weights = new HashMap<String, Double>() {{
-            put("followers", 0.25);
-            put("description", 0.25);
-            put("worksCount", 0.25);
-            put("books", 0.25);
+            put("followers", 0.33);
+            put("worksCount", 0.33);
+            put("books", 0.34);
         }};
     }
 
