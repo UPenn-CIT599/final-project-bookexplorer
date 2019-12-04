@@ -24,9 +24,11 @@ public class BookSimCalculator {
     public BookSimCalculator(Book targetBook, Book comparedBook) {
         this.targetBook = targetBook;
         this.comparedBook = comparedBook;
+        // below weights are determined based on manual trial and error
+        // as an additional feature idea, use machine learning to adjust weights
         this.weights = new HashMap<String, Double>() {{
-            put("ratings", 0.1);
-            put("ratingsCount", 0.1);
+            put("ratings", 0.15);
+            put("ratingsCount", 0.05);
             put("bookLength", 0.1);
             put("description", 0.3);
             put("publicationYear", 0.4);

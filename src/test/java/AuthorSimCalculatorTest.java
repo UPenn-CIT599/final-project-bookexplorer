@@ -58,7 +58,7 @@ class AuthorSimCalculatorTest {
         double similarity2 = calc2.booksSimilarity();
         System.out.println(similarity1);
         System.out.println(similarity2);
-        assertTrue(calc1.booksSimilarity() < calc2.booksSimilarity());
+        assertTrue(similarity1 < similarity2);
     }
 
     @Test
@@ -66,7 +66,13 @@ class AuthorSimCalculatorTest {
         AuthorSimCalculator calc1 = new AuthorSimCalculator(rowling, tolkien);
         AuthorSimCalculator calc2 = new AuthorSimCalculator(tolkien, dickens);
         AuthorSimCalculator calc3 = new AuthorSimCalculator(dickens, austen);
-        assertTrue(calc1.weightedSimilarity() > calc2.weightedSimilarity());
-        assertTrue(calc3.weightedSimilarity() > calc2.weightedSimilarity());
+        double sim1 = calc1.weightedSimilarity();
+        double sim2 = calc2.weightedSimilarity();
+        double sim3 = calc3.weightedSimilarity();
+        System.out.println(sim1);
+        System.out.println(sim2);
+        System.out.println(sim3);
+        assertTrue(sim1 > sim2);
+        assertTrue(sim3 > sim2);
     }
 }
