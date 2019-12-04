@@ -17,7 +17,7 @@ public class UserInteraction {
 	RequestHandler reqHandler;
 
 	public UserInteraction() {
-		this.recMaker = new RecMaker("genreAuthors.csv");
+		this.recMaker = new RecMaker("src/main/resources/genreAuthors.csv");
 		this.reqHandler = new RequestHandler();
 	}
 
@@ -25,7 +25,7 @@ public class UserInteraction {
 		UserInteraction interacter = new UserInteraction();
 		String authorName = interacter.getInputFromUser("Please provide the name of an author whom you most recently read");
 		String bookName = interacter.getInputFromUser("Please provide the name of a book that you most recently read:");
-		String genre = interacter.getInputFromUser("Please provide a genre: ");
+		String genre = interacter.getInputFromUser("Please provide a genre: ").toLowerCase();
 		interacter.recommendAuthorAndBook(authorName, genre, bookName);
 	}
 

@@ -19,7 +19,9 @@ public class RecMaker {
 	static HashMap<String, Book> seenBooksByTitle;
 
 	public RecMaker(String fileName) {
+		this.genreAuthors = new HashMap<>();
 		this.genreAuthors = readGenreAuthorsFile(fileName);
+		handler = new RequestHandler();
 		this.seenAuthorsByID = new HashMap<String, Author>();
 		this.seenBooksByTitle = new HashMap<String, Book>();
 	}
