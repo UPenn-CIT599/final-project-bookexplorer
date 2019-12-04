@@ -23,32 +23,40 @@ class BookSimCalculatorTest {
         pride.publicationYear = 1813;
         pride.averageRating = 4.26;
         pride.pagesNum = 279;
-        pride.description = "Since its immediate success in 1813, Pride and Prejudice has remained one of the most popular novels in the English language. Jane Austen called this brilliant work \"her own darling child\" and its vivacious heroine, Elizabeth Bennet, \"as delightful a creature as ever appeared in print.\" The romantic clash between the opinionated Elizabeth and her proud beau, Mr. Darcy, is a splendid performance of civilized sparring. And Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.";
+        pride.description = "Jane Austen's radiant wit sparkles as her characters dance a delicate quadrille of flirtation and intrigue, making this book the most superb comedy of manners of Regency England.";
         sensibility = new Book("Sense and Sensibility");
         sensibility.goodReadsID = "14935";
         sensibility.ratingsCount = 888581;
         sensibility.publicationYear = 1811;
         sensibility.averageRating = 4.07;
         sensibility.pagesNum = 409;
-        sensibility.description = "Marianne Dashwood wears her heart on her sleeve, and when she falls in love with the dashing but unsuitable John Willoughby she ignores her sister Elinor's warning that her impulsive behaviour leaves her open to gossip and innuendo. Meanwhile Elinor, always sensitive to social convention, is struggling to conceal her own romantic disappointment, even from those closest to her. Through their parallel experience of love—and its threatened loss—the sisters learn that sense must mix with sensibility if they are to find personal happiness in a society where status and money govern the rules of love.";
+        sensibility.description = "Through their parallel experience of love—and its threatened loss—the sisters learn that sense must mix with sensibility if they are to find personal happiness in a society where status and money govern the rules of love.";
         tippingPoint = new Book("Tipping Point");
         tippingPoint.goodReadsID = "2612";
         tippingPoint.ratingsCount = 627591;
         tippingPoint.publicationYear = 2000;
         tippingPoint.averageRating = 3.96;
         tippingPoint.pagesNum = 301;
-        tippingPoint.description = "The tipping point is that magic moment when an idea, trend, or social behavior crosses a threshold, tips, and spreads like wildfire. Just as a single sick person can start an epidemic of the flu, so too can a small but precisely targeted push cause a fashion trend, the popularity of a new product, or a drop in the crime rate. This widely acclaimed bestseller, in which Malcolm Gladwell explores and brilliantly illuminates the tipping point phenomenon, is already changing the way people throughout the world think about selling products and disseminating ideas.";
+        tippingPoint.description = "Gladwell introduces us to the particular personality types who are natural pollinators of new ideas and trends, the people who create the phenomenon of word of mouth.";
         cal1 = new BookSimCalculator(sensibility, tippingPoint);
         cal2 = new BookSimCalculator(pride, sensibility);
     }
 
     @Test
     void descriptionSim() {
-        assertTrue(cal1.descriptionSim() < cal2.descriptionSim());
+        double sim1 = cal1.descriptionSim();
+        double sim2 = cal2.descriptionSim();
+        System.out.println(sim1);
+        System.out.println(sim2);
+        assertTrue(sim1 < sim2);
     }
 
     @Test
     void weightedSimilarity() {
-        assertTrue(cal1.weightedSimilarity() < cal2.weightedSimilarity());
+        double weighted1 = cal1.weightedSimilarity();
+        double weighted2 = cal2.weightedSimilarity();
+        System.out.println(weighted1);
+        System.out.println(weighted2);
+        assertTrue(weighted1 < weighted2);
     }
 }

@@ -25,11 +25,11 @@ public class BookSimCalculator {
         this.targetBook = targetBook;
         this.comparedBook = comparedBook;
         this.weights = new HashMap<String, Double>() {{
-            put("ratings", 0.2);
-            put("ratingsCount", 0.2);
-            put("bookLength", 0.2);
-            put("description", 0.2);
-            put("publicationYear", 0.2);
+            put("ratings", 0.1);
+            put("ratingsCount", 0.1);
+            put("bookLength", 0.1);
+            put("description", 0.3);
+            put("publicationYear", 0.4);
         }};
         this.handler = new RequestHandler();
     }
@@ -38,6 +38,10 @@ public class BookSimCalculator {
 
     }
 
+    /**
+     * Calculates similarities of 2 books' descriptions based on synonyms
+     * @return a similarity index of between 0 and 1
+     */
     public double descriptionSim() {
         int synCount = 0;
         ArrayList<String> descriptionWords1 = descriptionToWords(comparedBook.description);
@@ -58,15 +62,15 @@ public class BookSimCalculator {
                         }
                     }
                 } catch (IOException e) {
-                    System.out.println(String.format("An error occurred while calling the synonyms API: %s", e.getMessage()));
+                    System.out.println(String.format("Warning: An error occurred while calling the synonyms API - %s", e.getMessage()));
                 } catch (ParserConfigurationException e) {
-                    System.out.println(String.format("An error occurred while calling the synonyms API: %s", e.getMessage()));
+                    System.out.println(String.format("Warning: An error occurred while calling the synonyms API - %s", e.getMessage()));
                 } catch (SAXException e) {
-                    System.out.println(String.format("An error occurred while calling the synonyms API: %s", e.getMessage()));
+                    System.out.println(String.format("Warning: An error occurred while calling the synonyms API - %s", e.getMessage()));
                 }
             }
         }
-        return ((double) synCount) / (descriptionWords1.size() + descriptionWords2.size());
+        return 1- ((double) synCount) / (descriptionWords1.size() + descriptionWords2.size());
     }
 
     /**
@@ -79,7 +83,7 @@ public class BookSimCalculator {
         if (num1 == 0 && num2 == 0) {
             return 1;
         } else {
-            return Math.abs(num1 - num2) / (num1 + num2);
+            return 1 - Math.abs(num1 - num2) / (num1 + num2);
         }
     }
 
@@ -93,13 +97,13 @@ public class BookSimCalculator {
         double publicationYearSim = weights.get("publicationYear") * singleSimCalc(comparedBook.publicationYear, targetBook.publicationYear);
         double bookLengthSim = weights.get("bookLength") * singleSimCalc(comparedBook.pagesNum, targetBook.pagesNum);
         double descriptionSim = weights.get("description") * descriptionSim();
-        return 1 - (ratingsSim + ratingsCountSim + publicationYearSim + bookLengthSim + descriptionSim);
+        return ratingsSim + ratingsCountSim + publicationYearSim + bookLengthSim + descriptionSim;
     }
 
     /**
-     * removes non-word characters from description and returns an array list of words
-     * @param description
-     * @return
+     * removes punctuations from description and returns an array list of words
+     * @param description - string of book description
+     * @return - array list of words in the description without punctuations or special symbols
      */
     private ArrayList<String> descriptionToWords(String description) {
         ArrayList<String> wordsList = new ArrayList<>(Arrays.asList(description.split(" ")));

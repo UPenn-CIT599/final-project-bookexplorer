@@ -31,7 +31,7 @@ public class RequestHandler {
         this.authorSearchApi = "https://www.goodreads.com/api/author_url/";
         this.authorDetailApi = "https://www.goodreads.com/author/show/";
         this.goodReadsDevKey = "GFGG3YidZvZxbGosF8DWA";
-        this.mwDevKey = "3555fca8-0edd-4221-b637-10a361f3ecee";
+        this.mwDevKey = "e274dbeb-31b8-43be-9ccd-ea7b4a0f6dd2";
         this.client = new OkHttpClient();
     }
 
@@ -98,11 +98,20 @@ public class RequestHandler {
     }
 
     public ArrayList<String> getSynonyms(String word) throws IOException, ParserConfigurationException, SAXException {
-        String requestUrl = String.format("https://www.dictionaryapi.com/api/v3/references/thesaurus/xml/%s?key=%s", word, mwDevKey);
+        String requestUrl = String.format("https://www.dictionaryapi.com/api/v1/references/thesaurus/xml/%s?key=%s", word, mwDevKey);
         String resp = sendRequest(requestUrl);
         Document respDoc = parseResponse(resp);
-        String synonyms = ((Element) respDoc.getElementsByTagName("sens").item(0)).getElementsByTagName("syn").item(0).getTextContent();
-        return new ArrayList<>(Arrays.asList(synonyms.split(", ")));
+        if (respDoc.getElementsByTagName("sens").getLength() > 0) {
+            NodeList synonymsNode = ((Element) respDoc.getElementsByTagName("sens").item(0)).getElementsByTagName("syn");
+            if (synonymsNode.getLength() > 0) {
+                String synonyms = synonymsNode.item(0).getTextContent();
+                return new ArrayList<>(Arrays.asList(synonyms.split(", ")));
+            } else {
+                return new ArrayList<>();
+            }
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     /**
