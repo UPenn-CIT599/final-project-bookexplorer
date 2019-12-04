@@ -76,7 +76,7 @@ public class RequestHandler {
 
     /**
      * Associates info from GoodReads to author attributes
-     * @param authorID
+     * @param authorID - goodReads author ID
      * @return author object
      * @throws IOException
      * @throws ParserConfigurationException
@@ -97,6 +97,14 @@ public class RequestHandler {
         return newAuthor;
     }
 
+    /**
+     * makes synonyms API request and parses response
+     * @param word - word whose synonyms we want to know
+     * @return - an array list of synonym words as strings
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
     public ArrayList<String> getSynonyms(String word) throws IOException, ParserConfigurationException, SAXException {
         String requestUrl = String.format("https://www.dictionaryapi.com/api/v1/references/thesaurus/xml/%s?key=%s", word, mwDevKey);
         String resp = sendRequest(requestUrl);
@@ -115,7 +123,7 @@ public class RequestHandler {
     }
 
     /**
-     * adds additional details to book object that's not available in the book search response
+     * sends request, parses, and adds book description as an attribute to the book object
      * @param book - book object
      * @throws IOException
      * @throws ParserConfigurationException
