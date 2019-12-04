@@ -49,10 +49,12 @@ public class BookSimCalculator {
                 ArrayList<String> synonyms = null;
                 try {
                     synonyms = handler.getSynonyms(word);
-                    for (String syn : synonyms) {
-                        if (descriptionWords2.contains(syn)) {
-                            synCount += 1;
-                            break;
+                    if (synonyms.size() != 0) {
+                        for (String syn : synonyms) {
+                            if (descriptionWords2.contains(syn)) {
+                                synCount += 1;
+                                break;
+                            }
                         }
                     }
                 } catch (IOException e) {
@@ -100,7 +102,11 @@ public class BookSimCalculator {
      * @return
      */
     private ArrayList<String> descriptionToWords(String description) {
-        ArrayList<String> cleanWords = new ArrayList<>(Arrays.asList(description.replaceAll("[^a-zA-Z]", "").toLowerCase().split(" ")));
+        ArrayList<String> wordsList = new ArrayList<>(Arrays.asList(description.split(" ")));
+        ArrayList<String> cleanWords = new ArrayList<>();
+        for (String word : wordsList) {
+            cleanWords.add(word.replaceAll("[^a-zA-Z]", "").toLowerCase());
+        }
         return cleanWords;
     }
 }
