@@ -54,9 +54,9 @@ public class UserInteraction {
 
 	/**
 	 *
-	 * @param authorName
-	 * @param genreName
-	 * @param bookTitle
+	 * @param authorName - author name input from user
+	 * @param genreName - genre name input from user
+	 * @param bookTitle - book title input from user
 	 * @return a hash map of {"Book": suggestedBook, "Author": suggestedAuthor}
 	 */
 	public HashMap<String, Object> recommendAuthorAndBook(String authorName, String genreName, String bookTitle) {
