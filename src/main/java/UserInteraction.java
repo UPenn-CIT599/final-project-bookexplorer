@@ -28,7 +28,13 @@ public class UserInteraction {
 		String bookName = interacter.getInputFromUser("Please provide the name of a book that you most recently read:", in);
 		String genre = interacter.getInputFromUser("Please provide a genre: ", in).toLowerCase();
 		in.close();
-		interacter.recommendAuthorAndBook(authorName, genre, bookName);
+		System.out.println("Cooking up your next book...");
+		HashMap<String, Object> results = interacter.recommendAuthorAndBook(authorName, genre, bookName);
+		System.out.println("Here is our recommendations: ");
+		String bookTitle = ((Book) results.get("Book")).title;
+		String recAuthorName = ((Author) results.get("Author")).name;
+		System.out.println(bookTitle);
+		System.out.println(recAuthorName);
 	}
 
 	public String getInputFromUser(String phrase, Scanner scanner) {

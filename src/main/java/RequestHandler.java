@@ -89,10 +89,12 @@ public class RequestHandler {
         String authorName = author.getElementsByTagName("name").item(0).getTextContent();
         int worksCount = Integer.parseInt(author.getElementsByTagName("works_count").item(0).getTextContent());
         String description = author.getElementsByTagName("about").item(0).getTextContent();
+        int followersCount = Integer.parseInt(author.getElementsByTagName("author_followers_count").item(0).getTextContent());
         Author newAuthor = new Author(authorName);
         // associate the attributes with the new author object
         newAuthor.goodReadsID = authorID;
         newAuthor.worksCount = worksCount;
+        newAuthor.followersCount = followersCount;
         newAuthor.description = description;
         return newAuthor;
     }
