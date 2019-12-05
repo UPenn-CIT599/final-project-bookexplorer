@@ -150,14 +150,16 @@ public class RequestHandler {
         Element book = (Element) workElement.getElementsByTagName("best_book").item(0);
         String bookTitle = book.getElementsByTagName("title").item(0).getTextContent();
         String bookId = book.getElementsByTagName("id").item(0).getTextContent();
-        String ratingsCount = ((Element) work).getElementsByTagName("ratings_count").item(0).getTextContent();
-        String ratings = ((Element) work).getElementsByTagName("average_rating").item(0).getTextContent();
-        String publicationYear = ((Element) work).getElementsByTagName("original_publication_year").item(0).getTextContent();
+        String ratingsCount = workElement.getElementsByTagName("ratings_count").item(0).getTextContent();
+        String ratings = workElement.getElementsByTagName("average_rating").item(0).getTextContent();
+        String publicationYear = workElement.getElementsByTagName("original_publication_year").item(0).getTextContent();
+        String imageUrl = book.getElementsByTagName("small_image_url").item(0).getTextContent();
         Book newBook = new Book(bookTitle);
         newBook.ratingsCount = Integer.parseInt(ratingsCount);
         newBook.goodReadsID = bookId;
         newBook.averageRating = Double.parseDouble(ratings);
         newBook.publicationYear = Integer.parseInt(publicationYear);
+        newBook.imageUrl = imageUrl;
         return newBook;
     }
 
