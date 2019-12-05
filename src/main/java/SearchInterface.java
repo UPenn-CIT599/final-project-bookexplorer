@@ -1,17 +1,16 @@
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -33,15 +32,17 @@ import javax.swing.SwingUtilities;
 public class SearchInterface implements Runnable {
 	
 	// Call on other classes to perform book search
-	RecMaker recMaker = new RecMaker();
+	RecMaker recMaker = new RecMaker("authors_and_genres.csv");
 	
 	// Initialize search results for book title, author, genre, book url, and image
-	String bookTitleResult = "";
-	String authorResult = "";
-	String genreResult = "";
+	Book recBook;
+	Author recAuthor;
+	String bookTitleInput = "";
+	String authorInput = "";
+	String genreInput = "";
 	String urlResult = "";
 	String imageResult = "";
-	
+
 	// Allow image to be displayed on JPanel
 	ImageIcon myImageIcon = new ImageIcon(imageResult);
 	
@@ -104,7 +105,7 @@ public class SearchInterface implements Runnable {
 		genre.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent g) {
-				genreResult = (String) genre.getSelectedItem();
+				genreInput = (String) genre.getSelectedItem();
 			}
 		});
 		
@@ -119,17 +120,16 @@ public class SearchInterface implements Runnable {
 				
 				// Code to run after search button is pressed
 				if (e.getSource() == search) {
-					bookTitleResult = bookTitle.getText();
-					authorResult = author.getText();
+					bookTitleInput = bookTitle.getText();
+					authorInput = author.getText();
 
-					recMaker.getBookPrediction(authorResult, bookTitleResult);
-					imageResult = Book.imageUrl;
+					HashMap<String, Object> recResults = (new UserInteraction()).recommendAuthorAndBook(authorInput, genreInput, bookTitleInput);
 					
 					// If algorithms can't find a similar enough book
-					if (!bookIsFound) {
-						JOptionPane.showMessageDialog(rightPanelSearchResults, "Sorry, the book, author, and genre you searched for netted no results."
-								+ " Please try again.");
-					}					
+//					if (!bookIsFound) {
+//						JOptionPane.showMessageDialog(rightPanelSearchResults, "Sorry, the book, author, and genre you searched for netted no results."
+//								+ " Please try again.");
+//					}
 				}
 			}
 			

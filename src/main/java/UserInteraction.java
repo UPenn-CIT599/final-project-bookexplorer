@@ -17,23 +17,29 @@ public class UserInteraction {
 	RequestHandler reqHandler;
 
 	public UserInteraction() {
-		this.recMaker = new RecMaker("src/main/resources/genreAuthors.csv");
+		this.recMaker = new RecMaker("src/main/resources/authors_and_genres.csv");
 		this.reqHandler = new RequestHandler();
 	}
 
 	public static void main(String[] args) {
 		UserInteraction interacter = new UserInteraction();
-		String authorName = interacter.getInputFromUser("Please provide the name of an author whom you most recently read");
-		String bookName = interacter.getInputFromUser("Please provide the name of a book that you most recently read:");
-		String genre = interacter.getInputFromUser("Please provide a genre: ").toLowerCase();
-		interacter.recommendAuthorAndBook(authorName, genre, bookName);
+		Scanner in = new Scanner(System.in);
+		String authorName = interacter.getInputFromUser("Please provide the name of an author whom you most recently read", in);
+		String bookName = interacter.getInputFromUser("Please provide the name of a book that you most recently read:", in);
+		String genre = interacter.getInputFromUser("Please provide a genre: ", in).toLowerCase();
+		in.close();
+		System.out.println("Cooking up your next book...");
+		HashMap<String, Object> results = interacter.recommendAuthorAndBook(authorName, genre, bookName);
+		System.out.println("Here is our recommendations: ");
+		String bookTitle = ((Book) results.get("Book")).title;
+		String recAuthorName = ((Author) results.get("Author")).name;
+		System.out.println(bookTitle);
+		System.out.println(recAuthorName);
 	}
 
-	public String getInputFromUser(String phrase) {
-		Scanner in = new Scanner(System.in);
+	public String getInputFromUser(String phrase, Scanner scanner) {
 		System.out.println(phrase);
-		String input = in.nextLine();
-		in.close();
+		String input = scanner.nextLine();
 		return input;
 	}
 
@@ -50,13 +56,17 @@ public class UserInteraction {
 		try {
 			Document authorSearchResp = reqHandler.authorSearchDoc(authorName);
 			while (!reqHandler.isAuthorFound(authorSearchResp)) {
-				authorName = getInputFromUser("Sorry, we couldn't find your author. Please input a new author name: ");
+				Scanner in = new Scanner(System.in);
+				authorName = getInputFromUser("Sorry, we couldn't find your author. Please input a new author name: ", in);
 				authorSearchResp = reqHandler.authorSearchDoc(authorName);
+				in.close();
 			}
 			Document bookSearchResp = reqHandler.getBookSearchResp(bookTitle);
 			while (!reqHandler.isBookFound(bookSearchResp)) {
-				bookTitle = getInputFromUser("Sorry, we couldn't find your book. Please input a new book name: ");
+				Scanner in = new Scanner(System.in);
+				bookTitle = getInputFromUser("Sorry, we couldn't find your book. Please input a new book name: ", in);
 				bookSearchResp = reqHandler.getBookSearchResp(bookTitle);
+				in.close();
 			}
 			String authorID = reqHandler.getAuthorID(authorSearchResp);
 			nextAuthor = recMaker.getAuthorPrediction(authorID, genreName);

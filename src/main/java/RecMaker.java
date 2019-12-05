@@ -36,20 +36,25 @@ public class RecMaker {
 		Author currentAuthor;
 		// check if author is seen, if yes, get author, if not, get author information by pulling data from GoodReads API, and save it to seenAuthors hash map
 		if (!seenAuthorsByID.containsKey(authorID)) {
-			currentAuthor = handler.saveAuthorDetails(authorID);
-			Document authorDetailResp = handler.getAuthorDetail(authorID);
-			ArrayList<HashMap<String, String>> booksAttributes = handler.getAuthorBooks(authorDetailResp);
-			saveBooksToAuthor(booksAttributes, currentAuthor);
+			currentAuthor = createAuthorFromId(authorID);
 			seenAuthorsByID.put(currentAuthor.goodReadsID, currentAuthor);
 		} else {
 			currentAuthor = seenAuthorsByID.get(authorID);
 		}
 		Author mostSimilarAuthor = currentAuthor;
 		// get list of authors from the same genre
+		if (!genreAuthors.containsKey(genre)) {
+			System.out.println("Genre not found, please try again");
+		}
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		ArrayList<String> authorIDs = new ArrayList<String>();
-		for (String name : authorNames) {
-			authorIDs.add(handler.getAuthorID(handler.authorSearchDoc(name)));
+		// get 5 random authors from the same genre from genre authors data list
+		ArrayList<Integer> authorIndexes = randomIntArray(authorNames.size(), 5);
+		for (int index : authorIndexes) {
+			String name = authorNames.get(index);
+		    if (!name.equals(currentAuthor.name)) {
+                authorIDs.add(handler.getAuthorID(handler.authorSearchDoc(name)));
+            }
 		}
 		double maxSimilarity = 0;
 		// find author of the max weighted similarity
@@ -57,9 +62,8 @@ public class RecMaker {
 			Author compareAuthor = null;
 			if (seenAuthorsByID.containsKey(id)) {
 				compareAuthor = seenAuthorsByID.get(id);
-
 			} else {
-				compareAuthor = handler.saveAuthorDetails(id);
+				compareAuthor = createAuthorFromId(id);
 				seenAuthorsByID.put(id, compareAuthor);
 			}
 			AuthorSimCalculator simCalculator = new AuthorSimCalculator(currentAuthor, compareAuthor);
@@ -124,6 +128,7 @@ public class RecMaker {
 				newBook.description = attributes.get("description");
 				newBook.imageUrl = attributes.get("imageURL");
 				newBook.averageRating = Double.valueOf(attributes.get("rating"));
+				author.books.add(newBook);
 				seenBooksByTitle.put(newBook.goodReadsID, newBook);
 			}
 		}
@@ -131,8 +136,8 @@ public class RecMaker {
 
 	/**
 	 * read data file that contains genre -> author name
-	 * @param fileName
-	 * @return
+	 * @param fileName - name of genre to author data file
+	 * @return hashmap of genre to author names
 	 */
 	public HashMap<String, ArrayList<String>> readGenreAuthorsFile(String fileName) {
 		File dataFile = new File(fileName);
@@ -147,7 +152,7 @@ public class RecMaker {
 		while (fileScanner.hasNextLine()) {
 			String[] genreAuthorsArray = fileScanner.nextLine().split(",");
 			String author = genreAuthorsArray[0];
-			String genre = genreAuthorsArray[1];
+			String genre = genreAuthorsArray[1].toLowerCase();
 			if (genreAuthors.containsKey(genre)) {
 				genreAuthors.get(genre).add(author);
 			} else {
@@ -155,5 +160,26 @@ public class RecMaker {
 			}
 		}
 		return genreAuthors;
+	}
+
+	private ArrayList<Integer> randomIntArray(int bound, int size) {
+		Random rand = new Random();
+		ArrayList<Integer> randomNums = new ArrayList<>();
+		for (int i = 0; i < size; i++) {
+			int randInt = rand.nextInt(bound);
+			while (randomNums.contains(randInt)) {
+				randInt = rand.nextInt();
+			}
+			randomNums.add(randInt - 1);
+		}
+		return randomNums;
+	}
+
+	private Author createAuthorFromId(String authorID) throws ParserConfigurationException, SAXException, IOException {
+		Author compareAuthor = handler.saveAuthorDetails(authorID);
+		Document authorDetailResp = handler.getAuthorDetail(authorID);
+		ArrayList<HashMap<String, String>> booksAttributes = handler.getAuthorBooks(authorDetailResp);
+		saveBooksToAuthor(booksAttributes, compareAuthor);
+		return compareAuthor;
 	}
 }
