@@ -46,6 +46,9 @@ public class RecMaker {
 		}
 		Author mostSimilarAuthor = currentAuthor;
 		// get list of authors from the same genre
+		if (!genreAuthors.containsKey(genre)) {
+			System.out.println("Genre not found, please try again");
+		}
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		ArrayList<String> authorIDs = new ArrayList<String>();
 		for (String name : authorNames) {
@@ -147,7 +150,7 @@ public class RecMaker {
 		while (fileScanner.hasNextLine()) {
 			String[] genreAuthorsArray = fileScanner.nextLine().split(",");
 			String author = genreAuthorsArray[0];
-			String genre = genreAuthorsArray[1];
+			String genre = genreAuthorsArray[1].toLowerCase();
 			if (genreAuthors.containsKey(genre)) {
 				genreAuthors.get(genre).add(author);
 			} else {
