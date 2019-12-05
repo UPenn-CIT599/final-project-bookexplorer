@@ -24,17 +24,12 @@ public class UserInteraction {
 	public static void main(String[] args) {
 		UserInteraction interacter = new UserInteraction();
 		Scanner in = new Scanner(System.in);
-		String authorName = interacter.getInputFromUser("Please provide the name of an author whom you most recently read", in);
-		String bookName = interacter.getInputFromUser("Please provide the name of a book that you most recently read:", in);
-		String genre = interacter.getInputFromUser("Please provide a genre: ", in).toLowerCase();
-		in.close();
-		System.out.println("Cooking up your next book...");
-		HashMap<String, Object> results = interacter.recommendAuthorAndBook(authorName, genre, bookName);
-		System.out.println("Here is our recommendations: ");
-		String bookTitle = ((Book) results.get("Book")).title;
-		String recAuthorName = ((Author) results.get("Author")).name;
-		System.out.println(bookTitle);
-		System.out.println(recAuthorName);
+		interacter.interactWithUser(in);
+		System.out.println("Would you like to see another book?");
+		String answer = in.nextLine();
+		while (!(answer.equals("No") || answer.equals("N"))) {
+			interacter.interactWithUser(in);
+		}
 	}
 
 	public String getInputFromUser(String phrase, Scanner scanner) {
@@ -43,11 +38,25 @@ public class UserInteraction {
 		return input;
 	}
 
+	public void interactWithUser(Scanner in) {
+		String authorName = getInputFromUser("Please provide the name of an author whom you most recently read", in);
+		String bookName = getInputFromUser("Please provide the name of a book that you most recently read:", in);
+		String genre = getInputFromUser("Please provide a genre: ", in).toLowerCase();
+		in.close();
+		System.out.println("Cooking up your next book...");
+		HashMap<String, Object> results = recommendAuthorAndBook(authorName, genre, bookName);
+		System.out.println("Here is our recommendations: ");
+		String bookTitle = ((Book) results.get("Book")).title;
+		String recAuthorName = ((Author) results.get("Author")).name;
+		System.out.println(bookTitle);
+		System.out.println(recAuthorName);
+	}
+
 	/**
 	 *
-	 * @param authorName
-	 * @param genreName
-	 * @param bookTitle
+	 * @param authorName - author name input from user
+	 * @param genreName - genre name input from user
+	 * @param bookTitle - book title input from user
 	 * @return a hash map of {"Book": suggestedBook, "Author": suggestedAuthor}
 	 */
 	public HashMap<String, Object> recommendAuthorAndBook(String authorName, String genreName, String bookTitle) {

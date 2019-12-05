@@ -1,0 +1,11 @@
+Project Name: Book Explorer
+
+Project description:
+Book Explorer is a java application that aims to recommend authors and books to users based on their most recent reading history. It leverages GoodReads API to retrieve details of authors and their books, and runs its own recommendation algorithm. Algorithm evaluates an author based on their count of followers, number of works, ratings and book similarities, and evaluates a book based on its descriptions, ratings, count of ratings and publication year.
+
+Work Breakdown:
+    Backend logic: Emily Yang
+        - similarities calculations, RequestHandler, RecMaker and UserInteraction
+    Frontend Logic and Data Research: Thomas Flannery
+        - SearchInterface and data sets in authors_and_genres.csv
+    Project approach: both team members contributed

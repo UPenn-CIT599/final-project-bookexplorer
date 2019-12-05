@@ -15,7 +15,6 @@ Book Explorer is a java application that aims to recommend authors and books to 
         * Genre
         * Prediction
         * User
-        * Publisher
     2. Classes responsible for key process logic:
         * RecMaker
             * Runs the process of making author and book recommendations
