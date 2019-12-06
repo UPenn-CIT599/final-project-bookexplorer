@@ -30,6 +30,7 @@ public class UserInteraction {
 		while (!(answer.equals("No") || answer.equals("N"))) {
 			interacter.interactWithUser(in);
 		}
+		in.close();
 	}
 
 	public String getInputFromUser(String phrase, Scanner scanner) {
@@ -42,7 +43,6 @@ public class UserInteraction {
 		String authorName = getInputFromUser("Please provide the name of an author whom you most recently read", in);
 		String bookName = getInputFromUser("Please provide the name of a book that you most recently read:", in);
 		String genre = getInputFromUser("Please provide a genre: ", in).toLowerCase();
-		in.close();
 		System.out.println("Cooking up your next book...");
 		HashMap<String, Object> results = recommendAuthorAndBook(authorName, genre, bookName);
 		System.out.println("Here is our recommendations: ");

@@ -4,9 +4,14 @@ Book Explorer is a java application that aims to recommend authors and books to 
 
 * There are 2 ways to run the program:
     * Command Line:
-        * Run the #main method in UserInteraction class, and start interacting with the recommendation app!
+        * Run the #main method in UserInteraction class, and start interacting with the app!
     * GUI:
         * If you would like a more visual interaction, run the #main method in SearchInterface, and start interacting with the app!
+        
+* Limitations:
+    * Due to time constraint, this app has several limitations and potential opportunities for improvement:
+        * The weight of each similarity evaluation is arbitrary, and machine learning (establishing a user profile, adjusting recommendations and weights based on recommendation feedback) was planned but not able to be implemented
+        * The app is designed to call on several external APIs. A database should be subsequently configured to save books and authors and their information. Because this was not implemented, the recommendation process is currently very slow. 
 
 1. **Architecture Components**:
     1. Classes that represent objects:

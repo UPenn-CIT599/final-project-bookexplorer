@@ -168,7 +168,7 @@ public class RecMaker {
 		for (int i = 0; i < size; i++) {
 			int randInt = rand.nextInt(bound);
 			while (randomNums.contains(randInt)) {
-				randInt = rand.nextInt();
+				randInt = rand.nextInt(bound);
 			}
 			randomNums.add(randInt - 1);
 		}
