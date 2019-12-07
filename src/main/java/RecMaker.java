@@ -35,6 +35,7 @@ public class RecMaker {
 	public Author getAuthorPrediction(String authorID, String genre) throws ParserConfigurationException, SAXException, IOException {
 		Author currentAuthor;
 		// check if author is seen, if yes, get author, if not, get author information by pulling data from GoodReads API, and save it to seenAuthors hash map
+		genre = genre.toLowerCase();
 		if (!seenAuthorsByID.containsKey(authorID)) {
 			currentAuthor = createAuthorFromId(authorID);
 			seenAuthorsByID.put(currentAuthor.goodReadsID, currentAuthor);
@@ -49,7 +50,7 @@ public class RecMaker {
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		ArrayList<String> authorIDs = new ArrayList<String>();
 		// get 5 random authors from the same genre from genre authors data list
-		ArrayList<Integer> authorIndexes = randomIntArray(authorNames.size(), 5);
+		ArrayList<Integer> authorIndexes = Utility.randomIntArray(authorNames.size(), 4);
 		for (int index : authorIndexes) {
 			String name = authorNames.get(index);
 		    if (!name.equals(currentAuthor.name)) {
@@ -91,7 +92,7 @@ public class RecMaker {
 			try {
 				Document bookSearchResp = handler.getBookSearchResp(bookTitle);
 				originalBook = handler.getBookFromBookSearch(bookSearchResp);
-				handler.saveBookDescription(originalBook);
+				handler.saveBookDescriptions(originalBook);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParserConfigurationException e) {
@@ -160,19 +161,6 @@ public class RecMaker {
 			}
 		}
 		return genreAuthors;
-	}
-
-	private ArrayList<Integer> randomIntArray(int bound, int size) {
-		Random rand = new Random();
-		ArrayList<Integer> randomNums = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			int randInt = rand.nextInt(bound);
-			while (randomNums.contains(randInt)) {
-				randInt = rand.nextInt();
-			}
-			randomNums.add(randInt - 1);
-		}
-		return randomNums;
 	}
 
 	private Author createAuthorFromId(String authorID) throws ParserConfigurationException, SAXException, IOException {

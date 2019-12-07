@@ -107,19 +107,33 @@ public class RequestHandler {
      * @throws ParserConfigurationException
      * @throws SAXException
      */
-    public ArrayList<String> getSynonyms(String word) throws IOException, ParserConfigurationException, SAXException {
+    public ArrayList<String> getSynonyms(String word) {
         String requestUrl = String.format("https://www.dictionaryapi.com/api/v1/references/thesaurus/xml/%s?key=%s", word, mwDevKey);
-        String resp = sendRequest(requestUrl);
-        Document respDoc = parseResponse(resp);
-        if (respDoc.getElementsByTagName("sens").getLength() > 0) {
-            NodeList synonymsNode = ((Element) respDoc.getElementsByTagName("sens").item(0)).getElementsByTagName("syn");
-            if (synonymsNode.getLength() > 0) {
-                String synonyms = synonymsNode.item(0).getTextContent();
-                return new ArrayList<>(Arrays.asList(synonyms.split(", ")));
+        try {
+            String resp = sendRequest(requestUrl);
+            String trimmedResp = resp.trim().replaceFirst("^([\\W]+)<", "<");
+            if (trimmedResp.contains("Results not found")) {
+                return new ArrayList<String>();
             } else {
-                return new ArrayList<>();
+                Document respDoc = parseResponse(trimmedResp);
+                if (respDoc.getElementsByTagName("sens").getLength() > 0) {
+                    NodeList synonymsNode = ((Element) respDoc.getElementsByTagName("sens").item(0)).getElementsByTagName("syn");
+                    if (synonymsNode.getLength() > 0) {
+                        String synonyms = synonymsNode.item(0).getTextContent();
+                        return new ArrayList<>(Arrays.asList(synonyms.split(", ")));
+                    } else {
+                        return new ArrayList<>();
+                    }
+                } else {
+                    return new ArrayList<>();
+                }
             }
-        } else {
+        }
+         catch (IOException e) {
+             return new ArrayList<>();
+        } catch (ParserConfigurationException e) {
+            return new ArrayList<>();
+        } catch (SAXException e) {
             return new ArrayList<>();
         }
     }
@@ -131,13 +145,13 @@ public class RequestHandler {
      * @throws ParserConfigurationException
      * @throws SAXException
      */
-    public void saveBookDescription(Book book) throws IOException, ParserConfigurationException, SAXException {
+    public void saveBookDescriptions(Book book) throws IOException, ParserConfigurationException, SAXException {
         String bookDetailUrl = String.format("https://www.goodreads.com/book/show/%s.xml?key=%s", book.goodReadsID, goodReadsDevKey);
         String respBody = sendRequest(bookDetailUrl);
         Document respDoc = parseResponse(respBody);
         Element bookElement = (Element) respDoc.getElementsByTagName("book").item(0);
         String description = bookElement.getElementsByTagName("description").item(0).getTextContent();
-        book.description = description.replaceAll("<.{1,5}>", " ");
+        book.description = description.replaceAll("<.{1,6}>", " ");
     }
 
     /**

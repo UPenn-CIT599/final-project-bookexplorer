@@ -31,10 +31,6 @@ import javax.swing.SwingUtilities;
  */
 
 public class SearchInterface implements Runnable {
-
-	// Call on other classes to perform book search
-	RecMaker recMaker = new RecMaker();
-
 	// Initialize search results for book title, author, genre, book url, and image
 	String bookTitleResult = "";
 	String authorResult = "";
@@ -69,9 +65,7 @@ public class SearchInterface implements Runnable {
 		imageResult.setIcon(myImageIcon);
 
 		// Create and designate sizes of text fields for book search results
-		JTextField bookTitleResultField = new JTextField();
-		bookTitleResultField.setPreferredSize(new Dimension(220, 24));
-		bookTitleResultField.setEditable(false);
+
 		JTextField authorResultField = new JTextField();
 		authorResultField.setPreferredSize(new Dimension(220, 24));
 		authorResultField.setEditable(false);
@@ -125,11 +119,21 @@ public class SearchInterface implements Runnable {
 					recMaker.getBookPrediction(authorResult, bookTitleResult);
 					imageResult = Book.imageUrl;
 
-					// If algorithms can't find a similar enough book
-					if (!bookIsFound) {
-						JOptionPane.showMessageDialog(rightPanelSearchResults, "Sorry, the book, author, and genre you searched for netted no results."
-								+ " Please try again.");
-					}
+					HashMap<String, Object> recResults = (new UserInteraction()).recommendAuthorAndBook(authorInput, genreInput, bookTitleInput);
+					Book recommendedBook = (Book) recResults.get("Book");
+					Author recommendedAuthor = (Author) recResults.get("Author");
+
+
+					JTextField bookTitleResultField = new JTextField(recommendedBook.title);
+					bookTitleResultField.setPreferredSize(new Dimension(220, 24));
+					bookTitleResultField.setEditable(false);
+					rightPanelSearchResults.add(bookTitleResultField);
+					
+//					 If algorithms can't find a similar enough book
+//					if (!bookIsFound) {
+//						JOptionPane.showMessageDialog(rightPanelSearchResults, "Sorry, the book, author, and genre you searched for netted no results."
+//								+ " Please try again.");
+//					}
 				}
 			}
 
@@ -168,7 +172,7 @@ public class SearchInterface implements Runnable {
 		searchImageResult.add(imageResult);
 
 		// Add search result text fields
-		rightPanelSearchResults.add(bookTitleResultField);
+//		rightPanelSearchResults.add(bookTitleResultField);
 		rightPanelSearchResults.add(authorResultField);
 		rightPanelSearchResults.add(urlResultField);
 

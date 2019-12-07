@@ -25,11 +25,12 @@ public class UserInteraction {
 		UserInteraction interacter = new UserInteraction();
 		Scanner in = new Scanner(System.in);
 		interacter.interactWithUser(in);
-		System.out.println("Would you like to see another book?");
-		String answer = in.nextLine();
-		while (!(answer.equals("No") || answer.equals("N"))) {
+		String nextRoundAnswer = interacter.getInputFromUser("Would you like to see another recommendation?", in).toLowerCase();
+		while (!(nextRoundAnswer.equals("no") || nextRoundAnswer.equals("n"))) {
 			interacter.interactWithUser(in);
+			nextRoundAnswer = interacter.getInputFromUser("Would you like to see another recommendation?", in).toLowerCase();
 		}
+		in.close();
 	}
 
 	public String getInputFromUser(String phrase, Scanner scanner) {
@@ -42,14 +43,16 @@ public class UserInteraction {
 		String authorName = getInputFromUser("Please provide the name of an author whom you most recently read", in);
 		String bookName = getInputFromUser("Please provide the name of a book that you most recently read:", in);
 		String genre = getInputFromUser("Please provide a genre: ", in).toLowerCase();
-		in.close();
 		System.out.println("Cooking up your next book...");
 		HashMap<String, Object> results = recommendAuthorAndBook(authorName, genre, bookName);
 		System.out.println("Here is our recommendations: ");
-		String bookTitle = ((Book) results.get("Book")).title;
-		String recAuthorName = ((Author) results.get("Author")).name;
-		System.out.println(bookTitle);
-		System.out.println(recAuthorName);
+		Book recBook = (Book) results.get("Book");
+		Author recAuthor = (Author) results.get("Author");
+		System.out.println("Our recommended book to you: ");
+		System.out.println(recBook.title);
+		System.out.println(recBook.description);
+		System.out.println("Our recommended author to you: ");
+		System.out.println(recAuthor.name);
 	}
 
 	/**
