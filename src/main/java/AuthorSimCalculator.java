@@ -25,29 +25,21 @@ public class AuthorSimCalculator extends BookSimCalculator {
      * @return average book similarities between 2 authors
      */
     public double booksSimilarity() {
-        int booksCount = 5;
-        ArrayList<Book> targetBooks = new ArrayList<Book>();
-        ArrayList<Book> comparedBooks = new ArrayList<Book>();
-        double totalSimilarities = 0.0;
-        if (targetAuthor.books.size() < comparedAuthor.books.size()) {
-            if (targetAuthor.books.size() <= 5) {
-                booksCount = targetAuthor.books.size();
-            }
-
+        ArrayList<Book> bookSet1 = targetAuthor.books;
+        ArrayList<Book> bookSet2 = comparedAuthor.books;
+        int inspectedBookSize = 0;
+        if (bookSet1.size() <= bookSet2.size()) {
+            inspectedBookSize = bookSet1.size();
         } else {
-            if (comparedAuthor.books.size() <= 5) {
-                booksCount = comparedAuthor.books.size();
-            }
+            inspectedBookSize = bookSet2.size();
         }
-        for (int i = 0; i < booksCount; i++) {
-            targetBooks.add(targetAuthor.books.get(i));
-            comparedBooks.add(comparedAuthor.books.get(i));
-        }
-        for (int i = 0; i < booksCount; i++) {
-            BookSimCalculator sim = new BookSimCalculator(targetBooks.get(i), comparedBooks.get(i));
+        double totalSimilarities = 0.0;
+        ArrayList<Integer> randIndexes = Utility.randomIntArray(inspectedBookSize, 5);
+        for (int index : randIndexes) {
+            BookSimCalculator sim = new BookSimCalculator(bookSet1.get(index), bookSet2.get(index));
             totalSimilarities += sim.weightedSimilarity();
         }
-        return totalSimilarities / booksCount;
+        return totalSimilarities / 5;
     }
 
     public double weightedSimilarity() {

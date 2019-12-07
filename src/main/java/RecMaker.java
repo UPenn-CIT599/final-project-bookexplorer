@@ -49,7 +49,7 @@ public class RecMaker {
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		ArrayList<String> authorIDs = new ArrayList<String>();
 		// get 5 random authors from the same genre from genre authors data list
-		ArrayList<Integer> authorIndexes = Utility.randomIntArray(authorNames.size(), 5);
+		ArrayList<Integer> authorIndexes = Utility.randomIntArray(authorNames.size(), 4);
 		for (int index : authorIndexes) {
 			String name = authorNames.get(index);
 		    if (!name.equals(currentAuthor.name)) {

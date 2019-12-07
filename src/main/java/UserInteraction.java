@@ -28,6 +28,7 @@ public class UserInteraction {
 		String nextRoundAnswer = interacter.getInputFromUser("Would you like to see another recommendation?", in).toLowerCase();
 		while (!(nextRoundAnswer.equals("no") || nextRoundAnswer.equals("n"))) {
 			interacter.interactWithUser(in);
+			nextRoundAnswer = interacter.getInputFromUser("Would you like to see another recommendation?", in).toLowerCase();
 		}
 		in.close();
 	}
@@ -45,10 +46,13 @@ public class UserInteraction {
 		System.out.println("Cooking up your next book...");
 		HashMap<String, Object> results = recommendAuthorAndBook(authorName, genre, bookName);
 		System.out.println("Here is our recommendations: ");
-		String bookTitle = ((Book) results.get("Book")).title;
-		String recAuthorName = ((Author) results.get("Author")).name;
-		System.out.println(bookTitle);
-		System.out.println(recAuthorName);
+		Book recBook = (Book) results.get("Book");
+		Author recAuthor = (Author) results.get("Author");
+		System.out.println("Our recommended book to you: ");
+		System.out.println(recBook.title);
+		System.out.println(recBook.description);
+		System.out.println("Our recommended author to you: ");
+		System.out.println(recAuthor.name);
 	}
 
 	/**

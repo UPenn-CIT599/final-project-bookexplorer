@@ -10,8 +10,8 @@ Book Explorer is a Java application that aims to recommend authors and books to 
         
 * Limitations:
     * Due to time constraint, this app has several limitations and potential opportunities for improvement:
-        * The weight of each similarity evaluation is arbitrary, and machine learning (establishing a user profile, adjusting recommendations and weights based on recommendation feedback) was planned but not able to be implemented
-        * The app is designed to call on several external APIs. A database should be subsequently configured to save books and authors and their information. Because this was not implemented, the recommendation process is currently very slow. 
+        * The weight of each similarity evaluation is arbitrary, and machine learning (establishing a user profile, adjusting recommendations and weights based on recommendation feedback) was planned but not implemented
+        * The app is designed to call on several external APIs. A database should be subsequently configured to save books and authors and their details. Because this was not implemented, the recommendation process is currently very slow. 
 
 1. **Architecture Components**:
     1. Classes that represent objects:
@@ -23,7 +23,7 @@ Book Explorer is a Java application that aims to recommend authors and books to 
         * `RequestHandler` (EY)
             * Making requests and parsing responses from external APIs (GoodReads, Merriam Webster)
         * `UserInteraction` (EY)
-            * Runs the user interaction process
+            * Runs the command line user interface
         * `AuthorSimCalculator` (EY)
             * Calculates similarities between 2 authors
             * Is a child class of BookSimCalculator

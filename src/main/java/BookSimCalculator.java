@@ -49,7 +49,7 @@ public class BookSimCalculator {
         ArrayList<String> descriptionWords1 = descriptionToWords(comparedBook.description);
         ArrayList<String> descriptionWords2 = descriptionToWords(targetBook.description);
         // only check a quarter of the words in descriptions to speed up recommendation process
-        ArrayList<Integer> wordIndexes = Utility.randomIntArray(descriptionWords1.size(), descriptionWords1.size() / 4);
+        ArrayList<Integer> wordIndexes = Utility.randomIntArray(descriptionWords1.size(), descriptionWords1.size() / 3);
         for (int index : wordIndexes) {
             String word = descriptionWords1.get(index);
             if (descriptionWords2.contains(word) && word.length() >= 6) {
