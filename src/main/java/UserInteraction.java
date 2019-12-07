@@ -25,9 +25,8 @@ public class UserInteraction {
 		UserInteraction interacter = new UserInteraction();
 		Scanner in = new Scanner(System.in);
 		interacter.interactWithUser(in);
-		System.out.println("Would you like to see another book?");
-		String answer = in.nextLine();
-		while (!(answer.equals("No") || answer.equals("N"))) {
+		String nextRoundAnswer = interacter.getInputFromUser("Would you like to see another recommendation?", in).toLowerCase();
+		while (!(nextRoundAnswer.equals("no") || nextRoundAnswer.equals("n"))) {
 			interacter.interactWithUser(in);
 		}
 		in.close();

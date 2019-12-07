@@ -49,7 +49,7 @@ public class RecMaker {
 		ArrayList<String> authorNames = genreAuthors.get(genre);
 		ArrayList<String> authorIDs = new ArrayList<String>();
 		// get 5 random authors from the same genre from genre authors data list
-		ArrayList<Integer> authorIndexes = randomIntArray(authorNames.size(), 5);
+		ArrayList<Integer> authorIndexes = Utility.randomIntArray(authorNames.size(), 5);
 		for (int index : authorIndexes) {
 			String name = authorNames.get(index);
 		    if (!name.equals(currentAuthor.name)) {
@@ -91,7 +91,7 @@ public class RecMaker {
 			try {
 				Document bookSearchResp = handler.getBookSearchResp(bookTitle);
 				originalBook = handler.getBookFromBookSearch(bookSearchResp);
-				handler.saveBookDescription(originalBook);
+				handler.saveBookDescriptions(originalBook);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParserConfigurationException e) {
@@ -160,19 +160,6 @@ public class RecMaker {
 			}
 		}
 		return genreAuthors;
-	}
-
-	private ArrayList<Integer> randomIntArray(int bound, int size) {
-		Random rand = new Random();
-		ArrayList<Integer> randomNums = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			int randInt = rand.nextInt(bound);
-			while (randomNums.contains(randInt)) {
-				randInt = rand.nextInt(bound);
-			}
-			randomNums.add(randInt - 1);
-		}
-		return randomNums;
 	}
 
 	private Author createAuthorFromId(String authorID) throws ParserConfigurationException, SAXException, IOException {
