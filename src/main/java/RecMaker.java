@@ -35,6 +35,7 @@ public class RecMaker {
 	public Author getAuthorPrediction(String authorID, String genre) throws ParserConfigurationException, SAXException, IOException {
 		Author currentAuthor;
 		// check if author is seen, if yes, get author, if not, get author information by pulling data from GoodReads API, and save it to seenAuthors hash map
+		genre = genre.toLowerCase();
 		if (!seenAuthorsByID.containsKey(authorID)) {
 			currentAuthor = createAuthorFromId(authorID);
 			seenAuthorsByID.put(currentAuthor.goodReadsID, currentAuthor);
