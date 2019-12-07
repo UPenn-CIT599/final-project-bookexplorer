@@ -1,6 +1,6 @@
 # Book Explorer
 
-Book Explorer is a java application that aims to recommend authors and books to users based on their most recent reading history. It leverages GoodReads API to retrieve details of authors and their books, and runs its own recommendation algorithm. 
+Book Explorer is a Java application that aims to recommend authors and books to users based on their most recent reading history. It leverages GoodReads API to retrieve details of authors and their books, and runs its own recommendation algorithm. 
 
 * There are 2 ways to run the program:
     * Command Line:
@@ -15,21 +15,24 @@ Book Explorer is a java application that aims to recommend authors and books to 
 
 1. **Architecture Components**:
     1. Classes that represent objects:
-        * Author
-        * Book
+        * `Author`
+        * `Book`
     2. Classes responsible for key process logic:
-        * RecMaker
+        * `RecMaker` (EY)
             * Runs the process of making author and book recommendations
-        * RequestHandler
+        * `RequestHandler` (EY)
             * Making requests and parsing responses from external APIs (GoodReads, Merriam Webster)
-        * UserInteraction
+        * `UserInteraction` (EY)
             * Runs the user interaction process
-        * AuthorSimCalculator
+        * `AuthorSimCalculator` (EY)
             * Calculates similarities between 2 authors
-        * BookSimCalculator
+            * Is a child class of BookSimCalculator
+        * `BookSimCalculator` (EY)
             * Calculates similarities between 2 books
-        * SearchInterface
+        * `SearchInterface` (TF)
             * Runs the Swing GUI Interface
+    3. Data sets (TF)
+        * We have compiled our own list of genres and authors, upon which our recommendation is based on. This is located at `src/main/resources/authors_and_genres.csv`
         
 2. **External Libraries Dependencies** 
     * please add jar file or use a dependency management tool for below libraries:
