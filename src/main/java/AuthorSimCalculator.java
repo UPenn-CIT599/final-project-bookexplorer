@@ -34,12 +34,17 @@ public class AuthorSimCalculator extends BookSimCalculator {
             inspectedBookSize = bookSet2.size();
         }
         double totalSimilarities = 0.0;
-        ArrayList<Integer> randIndexes = Utility.randomIntArray(inspectedBookSize, 5);
-        for (int index : randIndexes) {
-            BookSimCalculator sim = new BookSimCalculator(bookSet1.get(index), bookSet2.get(index));
-            totalSimilarities += sim.weightedSimilarity();
+//        ArrayList<Integer> randIndexes = Utility.randomIntArray(inspectedBookSize, 5);
+//        for (int index : randIndexes) {
+//            BookSimCalculator sim = new BookSimCalculator(bookSet1.get(index), bookSet2.get(index));
+//            totalSimilarities += sim.weightedSimilarity();
+//        }
+        for (int i = 0; i < inspectedBookSize; i++) {
+            BookSimCalculator calc = new BookSimCalculator(bookSet1.get(i), bookSet2.get(i));
+            totalSimilarities += calc.weightedSimilarity();
         }
-        return totalSimilarities / 5;
+        return totalSimilarities / inspectedBookSize;
+//        return totalSimilarities / 5;
     }
 
     public double weightedSimilarity() {

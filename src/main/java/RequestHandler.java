@@ -11,6 +11,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -215,11 +216,14 @@ public class RequestHandler {
      * Creates book objects and saves books to the author
      * @param authorDetailDoc author details response obtained from GoodReads API
      */
-    public ArrayList<HashMap<String, String>> getAuthorBooks(Document authorDetailDoc) throws ParserConfigurationException {
+    public ArrayList<HashMap<String, String>> getAuthorBooks(Document authorDetailDoc) {
         NodeList books = authorDetailDoc.getElementsByTagName("book");
+        int booksCount = books.getLength();
         ArrayList booksWithAttributes = new ArrayList<HashMap<String, String>>();
-        for (Node bookNode : iterable(books)) {
-            Document bookDoc = nodeToDoc(bookNode);
+        int savedBooksCount = booksCount > 5 ? booksCount / 5 : booksCount;
+        ArrayList<Integer> randIndexes = Utility.randomIntArray(booksCount, savedBooksCount);
+        for (int index : randIndexes) {
+            Element bookDoc = (Element) books.item(index);
             String title = bookDoc.getElementsByTagName("title").item(0).getTextContent();
             String description = bookDoc.getElementsByTagName("description").item(0).getTextContent();
             String imageUrl = bookDoc.getElementsByTagName("image_url").item(0).getTextContent();
