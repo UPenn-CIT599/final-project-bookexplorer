@@ -2,11 +2,9 @@
 
 Book Explorer is a Java application that aims to recommend authors and books to users based on their most recent reading history. It leverages GoodReads API to retrieve details of authors and their books, and runs its own recommendation algorithm. 
 
-* There are 2 ways to run the program:
+* To run the program:
     * Command Line:
         * Run the #main method in UserInteraction class, and start interacting with the app!
-    * GUI:
-        * If you would like a more visual interaction, run the #main method in SearchInterface, and start interacting with the app!
         
 * Limitations:
     * Due to time constraint, this app has several limitations and potential opportunities for improvement:
